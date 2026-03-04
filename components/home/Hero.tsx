@@ -1,0 +1,155 @@
+export default function Hero() {
+  return (
+    <section className="bg-gradient-to-br from-primary/5 via-white to-accent/5 pt-8 pb-16 lg:pt-12 lg:pb-20">
+      <div className="container-custom">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Column - Copy & CTA */}
+          <div className="order-2 lg:order-1">
+            {/* Trust Badges Above Headline */}
+            <div className="flex flex-wrap gap-3 mb-6">
+              <span className="trust-badge">
+                <svg
+                  className="w-5 h-5 text-accent"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                4.9★ Rating
+              </span>
+              <span className="trust-badge">🇺🇸 Veteran Owned</span>
+              <span className="trust-badge">✓ Licensed & Insured</span>
+            </div>
+
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary mb-6 text-balance">
+              Same-Day Dumpster Rental in{" "}
+              <span className="text-primary">Missouri</span>
+            </h1>
+
+            <p className="text-xl md:text-2xl text-gray-700 mb-8 text-balance">
+              When you&apos;re ready to get rid of some junk and stuff, call
+              Duff! <strong>From $299</strong> with no hidden fees.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <a href="#book-now" className="btn-primary text-center">
+                <svg
+                  className="w-6 h-6 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Book Your Dumpster Now
+              </a>
+              <a href="tel:+15733564272" className="btn-secondary text-center">
+                <svg
+                  className="w-6 h-6 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
+                (573) 356-4272
+              </a>
+            </div>
+
+            {/* Value Props */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+              <div className="flex items-start gap-2">
+                <svg
+                  className="w-5 h-5 text-success flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <span className="text-gray-700">
+                  Same-day delivery available
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <svg
+                  className="w-5 h-5 text-success flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <span className="text-gray-700">Flexible rental periods</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <svg
+                  className="w-5 h-5 text-success flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <span className="text-gray-700">Loading service available</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Hero Image */}
+          <div className="order-1 lg:order-2">
+            <div className="relative">
+              <img
+                src="https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?w=800&h=600&fit=crop"
+                alt="Professional dumpster delivery on residential driveway"
+                className="rounded-2xl shadow-2xl w-full h-auto"
+              />
+              {/* Floating Card */}
+              <div className="absolute bottom-4 left-4 right-4 bg-white rounded-lg shadow-xl p-4 border-l-4 border-primary">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">
+                      Perfect Size for Most Projects
+                    </p>
+                    <p className="text-2xl font-bold text-secondary">
+                      15 Yard Dumpster
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-600">Starting at</p>
+                    <p className="text-3xl font-bold text-primary">$299</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

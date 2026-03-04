@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Design System Variables */
+  --color-primary: #0066cc;
+  --color-primary-dark: #004c99;
+  --color-secondary: #2d3748;
+  --color-accent: #f59e0b;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f7fafc;
+  --color-text: #1a202c;
+  --color-text-muted: #718096;
+  --color-border: #e2e8f0;
+  --color-success: #10b981;
+
+  --button-height: 52px;
+  --input-height: 48px;
+  --max-width: 1280px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-secondary bg-white;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-bold;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl leading-tight;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl leading-tight;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  p {
+    @apply text-base md:text-lg leading-relaxed;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold transition-all duration-200 min-h-[52px] text-base md:text-lg;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply btn bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white;
+  }
+
+  .btn-accent {
+    @apply btn bg-accent text-white hover:bg-accent-dark shadow-md hover:shadow-lg;
+  }
+
+  .container-custom {
+    @apply max-w-container mx-auto px-4 md:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all min-h-[48px];
+  }
+
+  .trust-badge {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-bg-alt rounded-lg text-sm font-semibold text-secondary;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
