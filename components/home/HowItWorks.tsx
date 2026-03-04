@@ -87,17 +87,17 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="section-padding bg-gradient-to-br from-primary/5 via-white to-accent/5">
+    <section className="section-padding bg-gradient-to-br from-secondary via-bg-alt to-primary/20">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="inline-block px-4 py-2 bg-primary/10 text-primary font-semibold rounded-full text-sm mb-4">
+          <span className="inline-block px-4 py-2 bg-primary/20 text-primary font-semibold rounded-full text-sm mb-4">
             Simple Process
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             How It Works
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-white/70 max-w-2xl mx-auto">
             Rent a dumpster shouldn&apos;t be complicated. Here&apos;s our
             4-step process to get you dumpin&apos; in no time.
           </p>
@@ -110,12 +110,12 @@ export default function HowItWorks() {
               <div key={idx} className="relative">
                 {/* Connector Line (desktop only) */}
                 {idx < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-16 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-gradient-to-r from-primary to-primary/30 z-0" />
+                  <div className="hidden lg:block absolute top-16 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-gradient-to-r from-primary to-primary/50 z-0" />
                 )}
 
-                <div className="card p-6 text-center hover:shadow-xl transition-shadow relative z-10 bg-white h-full">
+                <div className="card p-6 text-center hover:shadow-xl transition-shadow relative z-10 bg-bg-alt h-full">
                   {/* Number Badge */}
-                  <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">
+                  <div className="w-16 h-16 bg-primary text-secondary rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">
                     {step.number}
                   </div>
 
@@ -125,10 +125,10 @@ export default function HowItWorks() {
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-secondary mb-3">
+                  <h3 className="text-xl font-bold text-white mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-white/70 text-sm leading-relaxed">
                     {step.description}
                   </p>
                 </div>
@@ -139,7 +139,7 @@ export default function HowItWorks() {
 
         {/* CTA Section */}
         <div className="mt-12 text-center">
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-white/80 mb-6">
             <strong>Ready to get started?</strong> Book now or call us with any
             questions.
           </p>

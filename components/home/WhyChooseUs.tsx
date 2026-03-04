@@ -95,14 +95,14 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-secondary">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Why Choose Dumpster Duff&apos;s?
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-white/70 max-w-2xl mx-auto">
             We&apos;re not just another dumpster company. We&apos;re your
             neighbors, committed to making waste removal simple, fast, and
             affordable.
@@ -117,11 +117,11 @@ export default function WhyChooseUs() {
               className="card p-6 md:p-8 hover:shadow-xl transition-shadow"
             >
               <div className="flex items-start gap-4">
-                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center text-primary flex-shrink-0">
+                <div className="w-14 h-14 bg-primary/20 rounded-lg flex items-center justify-center text-primary flex-shrink-0">
                   {benefit.icon}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl md:text-2xl font-bold text-secondary mb-3">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
                     {benefit.title}
                   </h3>
                   <ul className="space-y-2">
@@ -140,7 +140,7 @@ export default function WhyChooseUs() {
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        <span className="text-gray-700">{point}</span>
+                        <span className="text-white/70">{point}</span>
                       </li>
                     ))}
                   </ul>
@@ -152,11 +152,11 @@ export default function WhyChooseUs() {
 
         {/* Additional Differentiator - Loading Service */}
         <div className="mt-12 max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-2xl p-8 border-2 border-accent/20">
+          <div className="bg-gradient-to-br from-accent/30 to-primary/20 rounded-2xl p-8 border-2 border-accent/40">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center flex-shrink-0">
                 <svg
-                  className="w-8 h-8 text-white"
+                  className="w-8 h-8 text-secondary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -170,10 +170,10 @@ export default function WhyChooseUs() {
                 </svg>
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h3 className="text-2xl font-bold text-secondary mb-2">
+                <h3 className="text-2xl font-bold text-white mb-2">
                   Don&apos;t Want to Load It Yourself?
                 </h3>
-                <p className="text-gray-700">
+                <p className="text-white/70">
                   We offer professional loading services! Just leave the junk,
                   and we&apos;ll handle the heavy lifting.
                   <strong className="text-accent">

@@ -23,10 +23,10 @@ export default function ServiceAreas() {
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Proudly Serving Central Missouri
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-white/70 max-w-2xl mx-auto">
             Local, veteran-owned, and committed to our communities. Same-day
             delivery available in most service areas.
           </p>
@@ -38,12 +38,12 @@ export default function ServiceAreas() {
             {primaryAreas.map((area, idx) => (
               <div
                 key={idx}
-                className="card p-6 bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20"
+                className="card p-6 bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/40"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
                     <svg
-                      className="w-6 h-6 text-white"
+                      className="w-6 h-6 text-secondary"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -63,7 +63,7 @@ export default function ServiceAreas() {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-secondary">
+                    <h3 className="text-xl font-bold text-white">
                       {area.city}
                     </h3>
                     <p className="text-sm text-primary font-semibold">
@@ -78,13 +78,13 @@ export default function ServiceAreas() {
 
         {/* Secondary Service Areas */}
         <div className="max-w-5xl mx-auto mb-8">
-          <h3 className="text-xl font-bold text-secondary mb-4 text-center">
+          <h3 className="text-xl font-bold text-white mb-4 text-center">
             We Also Serve:
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {secondaryAreas.map((area, idx) => (
               <div key={idx} className="text-center">
-                <span className="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-lg shadow-sm text-sm font-semibold text-secondary hover:shadow-md transition-shadow">
+                <span className="inline-flex items-center gap-2 px-3 py-2 bg-bg-alt rounded-lg shadow-sm text-sm font-semibold text-white hover:shadow-md transition-shadow hover:border-primary border border-transparent">
                   <svg
                     className="w-4 h-4 text-primary"
                     fill="currentColor"
@@ -105,7 +105,7 @@ export default function ServiceAreas() {
 
         {/* Map Placeholder / Not Listed CTA */}
         <div className="max-w-3xl mx-auto">
-          <div className="card p-8 bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/20 text-center">
+          <div className="card p-8 bg-gradient-to-br from-accent/30 to-primary/20 border-2 border-accent/40 text-center">
             <svg
               className="w-16 h-16 text-accent mx-auto mb-4"
               fill="none"
@@ -119,10 +119,10 @@ export default function ServiceAreas() {
                 d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
               />
             </svg>
-            <h3 className="text-2xl font-bold text-secondary mb-3">
+            <h3 className="text-2xl font-bold text-white mb-3">
               Don&apos;t See Your City?
             </h3>
-            <p className="text-gray-700 mb-6">
+            <p className="text-white/70 mb-6">
               We&apos;re always expanding! Call us to check if we service your
               area. We may be able to help even if you&apos;re not listed above.
             </p>
@@ -138,7 +138,7 @@ export default function ServiceAreas() {
         </div>
 
         {/* Service Area Stats */}
-        <div className="mt-12 text-center text-sm text-gray-600">
+        <div className="mt-12 text-center text-sm text-white/60">
           <p>
             <strong>Service Radius:</strong> Up to 50 miles from Columbia, MO •
             <strong> Delivery Fee:</strong> Included in price for most areas

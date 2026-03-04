@@ -33,14 +33,14 @@ export default function FAQTeaser() {
   ];
 
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-secondary">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-white/70 max-w-2xl mx-auto">
             Got questions? We&apos;ve got answers. Here are the most common
             questions we hear from customers.
           </p>
@@ -49,9 +49,9 @@ export default function FAQTeaser() {
         {/* FAQ List */}
         <div className="max-w-3xl mx-auto space-y-4">
           {faqs.map((faq, idx) => (
-            <details key={idx} className="card p-6 group">
+            <details key={idx} className="card p-6 group bg-bg-alt">
               <summary className="flex items-start justify-between cursor-pointer list-none">
-                <h3 className="text-lg font-bold text-secondary pr-4 flex-1">
+                <h3 className="text-lg font-bold text-white pr-4 flex-1">
                   {faq.question}
                 </h3>
                 <svg
@@ -68,7 +68,7 @@ export default function FAQTeaser() {
                   />
                 </svg>
               </summary>
-              <div className="mt-4 text-gray-700 leading-relaxed">
+              <div className="mt-4 text-white/70 leading-relaxed">
                 {faq.answer}
               </div>
             </details>
@@ -77,7 +77,7 @@ export default function FAQTeaser() {
 
         {/* CTA to Full FAQ Page */}
         <div className="mt-12 text-center">
-          <p className="text-gray-600 mb-4">Still have questions?</p>
+          <p className="text-white/70 mb-4">Still have questions?</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/faq" className="btn-secondary">
               <svg
@@ -97,7 +97,7 @@ export default function FAQTeaser() {
             </a>
             <a
               href="tel:+15733564272"
-              className="btn bg-white text-secondary border-2 border-gray-300 hover:border-primary hover:text-primary"
+              className="btn bg-bg-alt text-white border-2 border-primary/30 hover:border-primary hover:text-primary"
             >
               <svg
                 className="w-5 h-5 mr-2"

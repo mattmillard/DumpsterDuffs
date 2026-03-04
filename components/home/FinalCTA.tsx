@@ -34,7 +34,7 @@ export default function FinalCTA() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <a
               href="#book-now"
-              className="btn bg-white text-primary hover:bg-gray-100 shadow-lg text-lg px-8"
+              className="btn bg-accent text-secondary hover:bg-accent-dark shadow-lg text-lg px-8"
             >
               <svg
                 className="w-6 h-6 mr-2"
