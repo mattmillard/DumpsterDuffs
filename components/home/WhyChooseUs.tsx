@@ -178,7 +178,7 @@ export default function WhyChooseUs() {
                   and we&apos;ll handle the heavy lifting.
                   <strong className="text-primary">
                     {" "}
-                    Add loading for just $149.
+                    Add loading starting at $149 depending on the job.
                   </strong>
                 </p>
               </div>

@@ -151,7 +151,7 @@ export default function InstantQuote() {
                       ✓ Includes delivery, pickup, and disposal
                       <br />
                       ✓ Same-day delivery in Columbia
-                      <br />✓ Add loading service for $149
+                      <br />✓ Add loading service starting at $149 depending on the job
                     </p>
                     <a
                       href="https://square.site/book/YOUR_BOOKING_ID"
