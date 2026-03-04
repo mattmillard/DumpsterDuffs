@@ -15,7 +15,11 @@ export default function Header() {
             href="/"
             className="flex items-center hover:opacity-80 transition-opacity"
           >
-            <img src="/logo-horizontal.png" alt="Dumpster Duff's" className="h-48 w-auto" />
+            <img
+              src="/logo-horizontal.png"
+              alt="Dumpster Duff's"
+              className="h-48 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}
