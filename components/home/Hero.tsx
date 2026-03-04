@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section className="bg-gradient-to-br from-primary/5 via-white to-accent/5 pt-8 pb-16 lg:pt-12 lg:pb-20">
+    <section className="bg-gradient-to-br from-secondary via-bg-alt to-primary/10 pt-8 pb-16 lg:pt-12 lg:pb-20">
       <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Column - Copy & CTA */}
@@ -21,12 +21,12 @@ export default function Hero() {
               <span className="trust-badge">✓ Licensed & Insured</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary mb-6 text-balance">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 text-balance">
               Same-Day Dumpster Rental in{" "}
               <span className="text-primary">Missouri</span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-700 mb-8 text-balance">
+            <p className="text-xl md:text-2xl text-white/70 mb-8 text-balance">
               When you&apos;re ready to get rid of some junk and stuff, call
               Duff! <strong>From $299</strong> with no hidden fees.
             </p>
@@ -82,7 +82,7 @@ export default function Hero() {
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span className="text-gray-700">
+                <span className="text-white/70">
                   Same-day delivery available
                 </span>
               </div>
@@ -100,7 +100,7 @@ export default function Hero() {
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span className="text-gray-700">Flexible rental periods</span>
+                <span className="text-white/70">Flexible rental periods</span>
               </div>
               <div className="flex items-start gap-2">
                 <svg
@@ -116,7 +116,7 @@ export default function Hero() {
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span className="text-gray-700">Loading service available</span>
+                <span className="text-white/70">Loading service available</span>
               </div>
             </div>
           </div>
@@ -130,18 +130,18 @@ export default function Hero() {
                 className="rounded-2xl shadow-2xl w-full h-auto"
               />
               {/* Floating Card */}
-              <div className="absolute bottom-4 left-4 right-4 bg-white rounded-lg shadow-xl p-4 border-l-4 border-primary">
+              <div className="absolute bottom-4 left-4 right-4 bg-bg-alt rounded-lg shadow-xl p-4 border-l-4 border-primary">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-white/60">
                       Perfect Size for Most Projects
                     </p>
-                    <p className="text-2xl font-bold text-secondary">
+                    <p className="text-2xl font-bold text-white">
                       15 Yard Dumpster
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-600">Starting at</p>
+                    <p className="text-sm text-white/60">Starting at</p>
                     <p className="text-3xl font-bold text-primary">$299</p>
                   </div>
                 </div>
