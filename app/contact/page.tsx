@@ -16,8 +16,8 @@ export default function Contact() {
             Contact Us
           </h1>
           <p className="text-xl text-white/70 mb-12">
-            Have a question? Want to book a dumpster? Get in touch with our
-            team today.
+            Have a question? Want to book a dumpster? Get in touch with our team
+            today.
           </p>
 
           {/* Contact Grid */}
@@ -43,9 +43,7 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white mb-2">
-                      Phone
-                    </h3>
+                    <h3 className="text-lg font-bold text-white mb-2">Phone</h3>
                     <a
                       href="tel:+15733564272"
                       className="text-primary font-semibold hover:text-accent"
@@ -78,9 +76,7 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white mb-2">
-                      Email
-                    </h3>
+                    <h3 className="text-lg font-bold text-white mb-2">Email</h3>
                     <a
                       href="mailto:dustin@dumpsterduffs.com"
                       className="text-primary font-semibold hover:text-accent"

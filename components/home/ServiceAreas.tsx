@@ -19,14 +19,14 @@ export default function ServiceAreas() {
   const secondaryAreas = serviceAreas.filter((a) => a.priority === "secondary");
 
   return (
-    <section className="section-padding bg-bg-alt">
+    <section className="section-padding bg-[#262626]">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Proudly Serving Central Missouri
           </h2>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto">
+          <p className="text-lg text-[#999999] max-w-2xl mx-auto">
             Local, veteran-owned, and committed to our communities. Same-day
             delivery available in most service areas.
           </p>
@@ -84,7 +84,7 @@ export default function ServiceAreas() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {secondaryAreas.map((area, idx) => (
               <div key={idx} className="text-center">
-                <span className="inline-flex items-center gap-2 px-3 py-2 bg-bg-alt rounded-lg shadow-sm text-sm font-semibold text-white hover:shadow-md transition-shadow hover:border-primary border border-transparent">
+                <span className="inline-flex items-center gap-2 px-3 py-2 bg-[#1A1A1A] rounded-lg shadow-sm text-sm font-semibold text-white hover:shadow-md transition-shadow hover:border-primary border border-transparent">
                   <svg
                     className="w-4 h-4 text-primary"
                     fill="currentColor"
@@ -107,7 +107,7 @@ export default function ServiceAreas() {
         <div className="max-w-3xl mx-auto">
           <div className="card p-8 bg-gradient-to-br from-accent/30 to-primary/20 border-2 border-accent/40 text-center">
             <svg
-              className="w-16 h-16 text-accent mx-auto mb-4"
+              className="w-16 h-16 text-primary mx-auto mb-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -122,7 +122,7 @@ export default function ServiceAreas() {
             <h3 className="text-2xl font-bold text-white mb-3">
               Don&apos;t See Your City?
             </h3>
-            <p className="text-white/70 mb-6">
+            <p className="text-[#999999] mb-6">
               We&apos;re always expanding! Call us to check if we service your
               area. We may be able to help even if you&apos;re not listed above.
             </p>
@@ -138,7 +138,7 @@ export default function ServiceAreas() {
         </div>
 
         {/* Service Area Stats */}
-        <div className="mt-12 text-center text-sm text-white/60">
+        <div className="mt-12 text-center text-sm text-[#808080]">
           <p>
             <strong>Service Radius:</strong> Up to 50 miles from Columbia, MO •
             <strong> Delivery Fee:</strong> Included in price for most areas

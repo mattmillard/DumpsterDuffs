@@ -9,24 +9,31 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#0066CC",
-          dark: "#004C99",
-          light: "#3385D6",
+          DEFAULT: "#FF8C00",
+          dark: "#E67E00",
+          light: "#FFA800",
         },
         secondary: {
-          DEFAULT: "#2D3748",
-          dark: "#1A202C",
-          light: "#4A5568",
+          DEFAULT: "#1A1A1A",
+          dark: "#0F0F0F",
+          light: "#262626",
         },
         accent: {
-          DEFAULT: "#F59E0B",
-          dark: "#D97706",
-          light: "#FBBF24",
+          DEFAULT: "#666666",
+          dark: "#404040",
+          light: "#999999",
         },
-        success: "#10B981",
+        success: "#4ADE80",
         bg: {
+          DEFAULT: "#0F0F0F",
+          alt: "#1A1A1A",
+          surface: "#262626",
+          card: "#1A1A1A",
+        },
+        text: {
           DEFAULT: "#FFFFFF",
-          alt: "#F7FAFC",
+          muted: "#999999",
+          dimmed: "#666666",
         },
       },
       fontFamily: {

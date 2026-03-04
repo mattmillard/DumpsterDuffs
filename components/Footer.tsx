@@ -2,22 +2,28 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary text-white">
+    <footer className="bg-[#0F0F0F] text-white">
       {/* Main Footer */}
       <div className="container-custom section-padding">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src="/logo-badge.svg" alt="Dumpster Duff's" className="w-10 h-10" />
-              <span className="font-bold text-xl text-primary">Dumpster Duff&apos;s</span>
+              <img
+                src="/logo-badge.png"
+                alt="Dumpster Duff's"
+                className="w-10 h-10"
+              />
+              <span className="font-bold text-xl text-primary">
+                Dumpster Duff&apos;s
+              </span>
             </div>
-            <p className="text-white/60 text-sm mb-4">
+            <p className="text-[#999999] text-sm mb-4">
               Veteran-owned dumpster rental serving Missouri communities with
               pride since 2020.
             </p>
             <div className="flex gap-4 mt-4">
-              <span className="trust-badge bg-white/10 text-white border border-white/20">
+              <span className="trust-badge bg-[#262626] text-white border border-[#404040]">
                 🇺🇸 Veteran Owned
               </span>
             </div>
@@ -26,7 +32,7 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h4 className="font-bold text-lg mb-4 text-primary">Quick Links</h4>
-            <ul className="space-y-2 text-white/70 hover:text-white transition-colors">
+            <ul className="space-y-2 text-[#999999] hover:text-white transition-colors">
               <li>
                 <Link
                   href="/sizes-pricing"
@@ -80,8 +86,10 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="font-bold text-lg mb-4 text-primary">Our Services</h4>
-            <ul className="space-y-2 text-white/70">
+            <h4 className="font-bold text-lg mb-4 text-primary">
+              Our Services
+            </h4>
+            <ul className="space-y-2 text-[#999999]">
               <li>15-Yard Dumpster Rental</li>
               <li>Same-Day Delivery</li>
               <li>Flexible Rental Periods</li>
@@ -94,7 +102,7 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 className="font-bold text-lg mb-4 text-primary">Contact Us</h4>
-            <ul className="space-y-3 text-white/70">
+            <ul className="space-y-3 text-[#999999]">
               <li>
                 <a
                   href="tel:+15733564272"

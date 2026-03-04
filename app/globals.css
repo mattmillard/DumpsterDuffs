@@ -3,17 +3,21 @@
 @tailwind utilities;
 
 :root {
-  /* Design System Variables */
-  --color-primary: #0066cc;
-  --color-primary-dark: #004c99;
-  --color-secondary: #2d3748;
-  --color-accent: #f59e0b;
-  --color-bg: #ffffff;
-  --color-bg-alt: #f7fafc;
-  --color-text: #1a202c;
-  --color-text-muted: #718096;
-  --color-border: #e2e8f0;
-  --color-success: #10b981;
+  /* Design System Variables - Netflix Dark Mode with Orange Accent */
+  --color-primary: #ff8c00;
+  --color-primary-dark: #e67e00;
+  --color-primary-light: #ffa800;
+  --color-secondary: #1a1a1a;
+  --color-secondary-dark: #0f0f0f;
+  --color-secondary-light: #262626;
+  --color-bg: #0f0f0f;
+  --color-bg-alt: #1a1a1a;
+  --color-bg-surface: #262626;
+  --color-text: #ffffff;
+  --color-text-muted: #999999;
+  --color-text-dimmed: #666666;
+  --color-border: #404040;
+  --color-success: #4ade80;
 
   --button-height: 52px;
   --input-height: 48px;
@@ -26,7 +30,7 @@
   }
 
   body {
-    @apply text-secondary bg-white;
+    @apply text-white bg-[#0F0F0F];
   }
 
   h1,
@@ -65,11 +69,11 @@
   }
 
   .btn-secondary {
-    @apply btn bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white;
+    @apply btn bg-secondary text-white border-2 border-primary hover:bg-[#262626] hover:text-primary;
   }
 
   .btn-accent {
-    @apply btn bg-accent text-white hover:bg-accent-dark shadow-md hover:shadow-lg;
+    @apply btn bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg;
   }
 
   .container-custom {
@@ -81,15 +85,15 @@
   }
 
   .card {
-    @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden;
+    @apply bg-[#1A1A1A] rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden border border-[#404040];
   }
 
   .input-field {
-    @apply w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all min-h-[48px];
+    @apply w-full px-4 py-3 rounded-lg border border-[#404040] bg-[#0F0F0F] text-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all min-h-[48px] placeholder-[#666666];
   }
 
   .trust-badge {
-    @apply inline-flex items-center gap-2 px-4 py-2 bg-bg-alt rounded-lg text-sm font-semibold text-secondary;
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-[#262626] rounded-lg text-sm font-semibold text-white border border-[#404040];
   }
 }
 

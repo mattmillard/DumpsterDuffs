@@ -18,12 +18,12 @@ export function StickyCTA() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-secondary border-t-2 border-primary shadow-lg lg:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#1A1A1A] border-t border-[#404040] shadow-lg lg:hidden">
       <div className="container-custom py-3">
         <div className="flex items-center gap-3">
           <a
             href="tel:+15733564272"
-            className="flex-1 btn bg-primary text-secondary hover:bg-primary-dark min-h-[48px]"
+            className="flex-1 btn bg-primary text-white hover:bg-primary-dark min-h-[48px]"
           >
             <svg
               className="w-5 h-5 mr-2"

@@ -37,7 +37,10 @@ export default function ServiceAreas() {
           {/* Service Areas Grid */}
           <div className="grid md:grid-cols-2 gap-4 mb-12">
             {areas.map((city, idx) => (
-              <div key={idx} className="card p-6 bg-bg-alt border-l-4 border-primary">
+              <div
+                key={idx}
+                className="card p-6 bg-bg-alt border-l-4 border-primary"
+              >
                 <div className="flex items-start gap-3">
                   <svg
                     className="w-6 h-6 text-primary flex-shrink-0 mt-0.5"
@@ -71,10 +74,13 @@ export default function ServiceAreas() {
 
           {/* Coverage Info */}
           <div className="card p-8 bg-bg-alt mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">Coverage Info</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Coverage Info
+            </h2>
             <div className="space-y-4 text-white/80">
               <p>
-                <strong>Service Radius:</strong> Up to 50 miles from Columbia, MO
+                <strong>Service Radius:</strong> Up to 50 miles from Columbia,
+                MO
               </p>
               <p>
                 <strong>Delivery Fee:</strong> Included in price for most areas

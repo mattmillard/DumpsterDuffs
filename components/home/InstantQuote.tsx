@@ -14,7 +14,7 @@ export default function InstantQuote() {
   };
 
   return (
-    <section id="book-now" className="section-padding bg-secondary">
+    <section id="book-now" className="section-padding bg-[#1A1A1A]">
       <div className="container-custom">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -22,7 +22,7 @@ export default function InstantQuote() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Get Your Price in 30 Seconds
             </h2>
-            <p className="text-lg text-white/70">
+            <p className="text-lg text-[#999999]">
               No hidden fees. Price locked at booking. Simple and transparent.
             </p>
           </div>
@@ -116,7 +116,7 @@ export default function InstantQuote() {
 
             {/* Estimate Display */}
             {showEstimate && (
-              <div className="mt-6 p-6 bg-bg-alt rounded-lg border-2 border-success">
+              <div className="mt-6 p-6 bg-[#262626] rounded-lg border-2 border-success">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-success rounded-full flex items-center justify-center flex-shrink-0">
                     <svg
@@ -137,7 +137,7 @@ export default function InstantQuote() {
                     <h3 className="text-xl font-bold text-white mb-2">
                       Perfect! We can help.
                     </h3>
-                    <p className="text-white/70 mb-4">
+                    <p className="text-[#999999] mb-4">
                       Based on your project, we recommend our{" "}
                       <strong>15-yard dumpster</strong> (16&apos; x 4&apos;).
                     </p>
@@ -145,9 +145,9 @@ export default function InstantQuote() {
                       <span className="text-4xl font-bold text-primary">
                         $299
                       </span>
-                      <span className="text-white/60">for up to 7 days</span>
+                      <span className="text-[#808080]">for up to 7 days</span>
                     </div>
-                    <p className="text-sm text-white/60 mb-4">
+                    <p className="text-sm text-[#808080] mb-4">
                       ✓ Includes delivery, pickup, and disposal
                       <br />
                       ✓ Same-day delivery available
@@ -167,7 +167,7 @@ export default function InstantQuote() {
             )}
 
             {/* Trust Line */}
-            <p className="text-center text-sm text-white/60 mt-6">
+            <p className="text-center text-sm text-[#808080] mt-6">
               🔒 Secure booking • No credit card required to get quote • Call us
               at{" "}
               <a href="tel:+15733564272" className="text-primary font-semibold">

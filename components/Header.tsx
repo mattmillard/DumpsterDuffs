@@ -7,7 +7,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-secondary shadow-lg sticky top-0 z-50 border-b-2 border-primary">
+    <header className="bg-[#1A1A1A] shadow-lg sticky top-0 z-50 border-b border-[#404040]">
       <div className="container-custom">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -16,7 +16,7 @@ export default function Header() {
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             <img
-              src="/logo-badge.svg"
+              src="/logo-badge.png"
               alt="Dumpster Duff's"
               className="w-12 h-12"
             />

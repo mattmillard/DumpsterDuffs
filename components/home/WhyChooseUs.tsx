@@ -95,14 +95,14 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="section-padding bg-secondary">
+    <section className="section-padding bg-[#1A1A1A]">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Why Choose Dumpster Duff&apos;s?
           </h2>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto">
+          <p className="text-lg text-[#999999] max-w-2xl mx-auto">
             We&apos;re not just another dumpster company. We&apos;re your
             neighbors, committed to making waste removal simple, fast, and
             affordable.
@@ -140,7 +140,7 @@ export default function WhyChooseUs() {
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        <span className="text-white/70">{point}</span>
+                        <span className="text-[#999999]">{point}</span>
                       </li>
                     ))}
                   </ul>
@@ -173,10 +173,10 @@ export default function WhyChooseUs() {
                 <h3 className="text-2xl font-bold text-white mb-2">
                   Don&apos;t Want to Load It Yourself?
                 </h3>
-                <p className="text-white/70">
+                <p className="text-[#999999]">
                   We offer professional loading services! Just leave the junk,
                   and we&apos;ll handle the heavy lifting.
-                  <strong className="text-accent">
+                  <strong className="text-primary">
                     {" "}
                     Add loading for just $149.
                   </strong>

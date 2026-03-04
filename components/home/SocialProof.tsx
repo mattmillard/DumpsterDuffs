@@ -34,14 +34,14 @@ export default function SocialProof() {
   ];
 
   return (
-    <section className="section-padding bg-secondary">
+    <section className="section-padding bg-[#0F0F0F]">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             What Our Customers Say
           </h2>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto">
+          <p className="text-lg text-[#999999] max-w-2xl mx-auto">
             Don&apos;t just take our word for it. Here&apos;s what real
             customers have to say about working with Dumpster Duff&apos;s.
           </p>
@@ -54,7 +54,7 @@ export default function SocialProof() {
               <div className="text-3xl md:text-4xl font-bold text-primary mb-1">
                 {stat.number}
               </div>
-              <div className="text-sm text-white/60 font-semibold">
+              <div className="text-sm text-[#808080] font-semibold">
                 {stat.label}
               </div>
             </div>
@@ -70,7 +70,7 @@ export default function SocialProof() {
                 {[...Array(review.rating)].map((_, i) => (
                   <svg
                     key={i}
-                    className="w-5 h-5 text-accent fill-current"
+                    className="w-5 h-5 text-primary fill-current"
                     viewBox="0 0 20 20"
                   >
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -79,7 +79,7 @@ export default function SocialProof() {
               </div>
 
               {/* Review Text */}
-              <p className="text-white/70 mb-4 flex-1 leading-relaxed">
+              <p className="text-[#999999] mb-4 flex-1 leading-relaxed">
                 &quot;{review.text}&quot;
               </p>
 
@@ -90,7 +90,7 @@ export default function SocialProof() {
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-white">{review.name}</p>
-                  <p className="text-sm text-white/60">
+                  <p className="text-sm text-[#808080]">
                     {review.project} • {review.date}
                   </p>
                 </div>
@@ -105,7 +105,7 @@ export default function SocialProof() {
             href="https://www.google.com/search?q=dumpster+duffs"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-primary hover:text-accent font-semibold transition-colors"
+            className="inline-flex items-center gap-2 text-primary hover:text-primary-light font-semibold transition-colors"
           >
             <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />

@@ -16,7 +16,7 @@ export default function SizeOverview() {
   };
 
   return (
-    <section className="section-padding bg-bg-alt">
+    <section className="section-padding bg-[#0F0F0F]">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
@@ -26,7 +26,7 @@ export default function SizeOverview() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             The Perfect Size for Most Projects
           </h2>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto">
+          <p className="text-lg text-[#999999] max-w-2xl mx-auto">
             We specialize in 15-yard dumpsters because they&apos;re the
             Goldilocks of dumpster rentals—not too big, not too small, just
             right for 90% of residential and small commercial projects.
@@ -43,17 +43,17 @@ export default function SizeOverview() {
                   {/* Dumpster Illustration */}
                   <div className="bg-primary rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform">
                     <div className="space-y-2">
-                      <div className="h-3 bg-white/30 rounded"></div>
-                      <div className="h-3 bg-white/30 rounded"></div>
-                      <div className="h-3 bg-white/30 rounded w-3/4"></div>
+                      <div className="h-3 bg-[#404040] rounded"></div>
+                      <div className="h-3 bg-[#404040] rounded"></div>
+                      <div className="h-3 bg-[#404040] rounded w-3/4"></div>
                     </div>
                   </div>
                   {/* Scale Reference */}
                   <div className="mt-4 text-center">
-                    <p className="text-sm text-white/70 font-semibold">
+                    <p className="text-sm text-[#999999] font-semibold">
                       Visual scale reference
                     </p>
-                    <p className="text-xs text-white/50 mt-1">
+                    <p className="text-xs text-[#666666] mt-1">
                       About the size of 4-5 pickup truck loads
                     </p>
                   </div>
@@ -61,11 +61,11 @@ export default function SizeOverview() {
 
                 {/* Price Badge */}
                 <div className="mt-6 bg-primary/10 rounded-lg shadow-md px-6 py-4 text-center border border-primary/30">
-                  <p className="text-sm text-white/70">Starting at</p>
+                  <p className="text-sm text-[#999999]">Starting at</p>
                   <p className="text-4xl font-bold text-primary">
                     {dumpsterInfo.price}
                   </p>
-                  <p className="text-sm text-white/60 mt-1">7-day rental</p>
+                  <p className="text-sm text-[#808080] mt-1">7-day rental</p>
                 </div>
               </div>
 
@@ -75,7 +75,7 @@ export default function SizeOverview() {
                   <h3 className="text-4xl font-bold text-white">
                     {dumpsterInfo.size}
                   </h3>
-                  <span className="text-lg text-white/70">Dumpster</span>
+                  <span className="text-lg text-[#999999]">Dumpster</span>
                 </div>
 
                 {/* Specs */}
@@ -94,7 +94,7 @@ export default function SizeOverview() {
                         d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
                       />
                     </svg>
-                    <span className="text-white/70">
+                    <span className="text-[#999999]">
                       <strong>Dimensions:</strong> {dumpsterInfo.dimensions}
                     </span>
                   </div>
@@ -112,7 +112,7 @@ export default function SizeOverview() {
                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                       />
                     </svg>
-                    <span className="text-white/70">
+                    <span className="text-[#999999]">
                       <strong>Capacity:</strong> {dumpsterInfo.capacity}
                     </span>
                   </div>
@@ -130,7 +130,7 @@ export default function SizeOverview() {
                         d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
                       />
                     </svg>
-                    <span className="text-white/70">
+                    <span className="text-[#999999]">
                       <strong>Weight limit:</strong> {dumpsterInfo.weight}
                     </span>
                   </div>
@@ -173,7 +173,7 @@ export default function SizeOverview() {
 
           {/* Not Sure Section */}
           <div className="mt-8 text-center">
-            <p className="text-white/70 mb-4">
+            <p className="text-[#999999] mb-4">
               <strong>Not sure if this size works for your project?</strong>
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -182,7 +182,7 @@ export default function SizeOverview() {
               </a>
               <a
                 href="/how-it-works#size-calculator"
-                className="btn bg-bg-alt text-white border-2 border-primary/30 hover:border-primary hover:text-primary"
+                className="btn bg-[#262626] text-white border-2 border-primary/30 hover:border-primary hover:text-primary"
               >
                 Use Size Calculator
               </a>

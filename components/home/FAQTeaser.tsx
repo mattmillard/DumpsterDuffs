@@ -33,14 +33,14 @@ export default function FAQTeaser() {
   ];
 
   return (
-    <section className="section-padding bg-secondary">
+    <section className="section-padding bg-[#1A1A1A]">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto">
+          <p className="text-lg text-[#999999] max-w-2xl mx-auto">
             Got questions? We&apos;ve got answers. Here are the most common
             questions we hear from customers.
           </p>
@@ -49,7 +49,7 @@ export default function FAQTeaser() {
         {/* FAQ List */}
         <div className="max-w-3xl mx-auto space-y-4">
           {faqs.map((faq, idx) => (
-            <details key={idx} className="card p-6 group bg-bg-alt">
+            <details key={idx} className="card p-6 group bg-[#262626]">
               <summary className="flex items-start justify-between cursor-pointer list-none">
                 <h3 className="text-lg font-bold text-white pr-4 flex-1">
                   {faq.question}
@@ -68,7 +68,7 @@ export default function FAQTeaser() {
                   />
                 </svg>
               </summary>
-              <div className="mt-4 text-white/70 leading-relaxed">
+              <div className="mt-4 text-[#999999] leading-relaxed">
                 {faq.answer}
               </div>
             </details>
@@ -77,7 +77,7 @@ export default function FAQTeaser() {
 
         {/* CTA to Full FAQ Page */}
         <div className="mt-12 text-center">
-          <p className="text-white/70 mb-4">Still have questions?</p>
+          <p className="text-[#999999] mb-4">Still have questions?</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/faq" className="btn-secondary">
               <svg
@@ -97,7 +97,7 @@ export default function FAQTeaser() {
             </a>
             <a
               href="tel:+15733564272"
-              className="btn bg-bg-alt text-white border-2 border-primary/30 hover:border-primary hover:text-primary"
+              className="btn bg-[#262626] text-white border-2 border-primary/30 hover:border-primary hover:text-primary"
             >
               <svg
                 className="w-5 h-5 mr-2"

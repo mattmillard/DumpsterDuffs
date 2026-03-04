@@ -97,7 +97,7 @@ export default function HowItWorks() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             How It Works
           </h2>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto">
+          <p className="text-lg text-[#999999] max-w-2xl mx-auto">
             Rent a dumpster shouldn&apos;t be complicated. Here&apos;s our
             4-step process to get you dumpin&apos; in no time.
           </p>
@@ -113,7 +113,7 @@ export default function HowItWorks() {
                   <div className="hidden lg:block absolute top-16 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-gradient-to-r from-primary to-primary/50 z-0" />
                 )}
 
-                <div className="card p-6 text-center hover:shadow-xl transition-shadow relative z-10 bg-bg-alt h-full">
+                <div className="card p-6 text-center hover:shadow-xl transition-shadow relative z-10 bg-[#262626] h-full">
                   {/* Number Badge */}
                   <div className="w-16 h-16 bg-primary text-secondary rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">
                     {step.number}
@@ -128,7 +128,7 @@ export default function HowItWorks() {
                   <h3 className="text-xl font-bold text-white mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-white/70 text-sm leading-relaxed">
+                  <p className="text-[#999999] text-sm leading-relaxed">
                     {step.description}
                   </p>
                 </div>
@@ -139,7 +139,7 @@ export default function HowItWorks() {
 
         {/* CTA Section */}
         <div className="mt-12 text-center">
-          <p className="text-lg text-white/80 mb-6">
+          <p className="text-lg text-[#CCCCCC] mb-6">
             <strong>Ready to get started?</strong> Book now or call us with any
             questions.
           </p>
