@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function SizeOverview() {
   const dumpsterInfo = {
     size: "15 Yard",
@@ -39,14 +41,15 @@ export default function SizeOverview() {
               {/* Left: Visual */}
               <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-8 flex flex-col items-center justify-center">
                 <div className="relative w-full max-w-xs">
-                  {/* Dumpster Illustration */}
-                  <div className="bg-primary rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform">
-                    <div className="space-y-2">
-                      <div className="h-3 bg-[#404040] rounded"></div>
-                      <div className="h-3 bg-[#404040] rounded"></div>
-                      <div className="h-3 bg-[#404040] rounded w-3/4"></div>
-                    </div>
-                  </div>
+                  {/* Dumpster 2D Image */}
+                  <Image
+                    src="/dumpster_2d.png"
+                    alt="15-yard dumpster"
+                    width={300}
+                    height={250}
+                    className="w-full h-auto"
+                    priority
+                  />
                 </div>
 
                 {/* Price Badge */}
