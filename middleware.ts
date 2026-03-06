@@ -12,4 +12,112 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
  * - / (home page)
  * - /booking/* (customer booking flow)
  */
-export async function middleware(request: NextRequest) {\n  const { pathname } = request.nextUrl;\n\n  // Allow login page without authentication\n  if (pathname === '/admin/login') {\n    return NextResponse.next();\n  }\n\n  // Protect admin routes\n  if (pathname.startsWith('/admin')) {\n    try {\n      // Create Supabase client for middleware\n      let response = NextResponse.next({\n        request: {\n          headers: request.headers,\n        },\n      });\n\n      const supabase = createServerClient(\n        process.env.NEXT_PUBLIC_SUPABASE_URL!,\n        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,\n        {\n          cookies: {\n            get(name: string) {\n              return request.cookies.get(name)?.value;\n            },\n            set(name: string, value: string, options: CookieOptions) {\n              response = NextResponse.next({\n                request: {\n                  headers: request.headers,\n                },\n              });\n              response.cookies.set({\n                name,\n                value,\n                ...options,\n              });\n            },\n            remove(name: string, options: CookieOptions) {\n              response = NextResponse.next({\n                request: {\n                  headers: request.headers,\n                },\n              });\n              response.cookies.delete({\n                name,\n                ...options,\n              });\n            },\n          },\n        }\n      );\n\n      // Get the current session\n      const {\n        data: { session },\n      } = await supabase.auth.getSession();\n\n      if (!session) {\n        // No session found, redirect to login\n        const url = request.nextUrl.clone();\n        url.pathname = '/admin/login';\n        url.searchParams.set('redirect', pathname);\n        return NextResponse.redirect(url);\n      }\n\n      // Session exists, check user role for specific routes\n      const { data: userData } = await supabase\n        .from('admin_users')\n        .select('role')\n        .eq('id', session.user.id)\n        .single();\n\n      // For now, allow all authenticated users to access admin\n      // Implement role-based route protection here if needed\n      if (!userData) {\n        const url = request.nextUrl.clone();\n        url.pathname = '/admin/login';\n        return NextResponse.redirect(url);\n      }\n\n      return response;\n    } catch (error) {\n      console.error('Middleware error:', error);\n      // On error, redirect to login for safety\n      const url = request.nextUrl.clone();\n      url.pathname = '/admin/login';\n      return NextResponse.redirect(url);\n    }\n  }\n\n  // Allow all other routes\n  return NextResponse.next();\n}\n\n// Configure which routes the middleware runs on\nexport const config = {\n  matcher: [\n    /*\n     * Match all request paths except for the ones starting with:\n     * - api (API routes)\n     * - _next/static (static files)\n     * - _next/image (image optimization files)\n     * - favicon.ico (favicon file)\n     * - public (public files)\n     */\n    '/((?!api|_next/static|_next/image|favicon.ico|public).*)',\n  ],\n};\n
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Allow login page without authentication
+  if (pathname === '/admin/login') {
+    return NextResponse.next();
+  }
+
+  // Protect admin routes
+  if (pathname.startsWith('/admin')) {
+    try {
+      // Create Supabase client for middleware
+      let response = NextResponse.next({
+        request: {
+          headers: request.headers,
+        },
+      });
+
+      const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          cookies: {
+            get(name: string) {
+              return request.cookies.get(name)?.value;
+            },
+            set(name: string, value: string, options: CookieOptions) {
+              response = NextResponse.next({
+                request: {
+                  headers: request.headers,
+                },
+              });
+              response.cookies.set({
+                name,
+                value,
+                ...options,
+              });
+            },
+            remove(name: string, options: CookieOptions) {
+              response = NextResponse.next({
+                request: {
+                  headers: request.headers,
+                },
+              });
+              response.cookies.delete({
+                name,
+                ...options,
+              });
+            },
+          },
+        }
+      );
+
+      // Get the current session
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        // No session found, redirect to login
+        const url = request.nextUrl.clone();
+        url.pathname = '/admin/login';
+        url.searchParams.set('redirect', pathname);
+        return NextResponse.redirect(url);
+      }
+
+      // Session exists, check user role for specific routes
+      const { data: userData } = await supabase
+        .from('admin_users')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
+      // For now, allow all authenticated users to access admin
+      // Implement role-based route protection here if needed
+      if (!userData) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/admin/login';
+        return NextResponse.redirect(url);
+      }
+
+      return response;
+    } catch (error) {
+      console.error('Middleware error:', error);
+      // On error, redirect to login for safety
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin/login';
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Allow all other routes
+  return NextResponse.next();
+}
+
+// Configure which routes the middleware runs on
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public (public files)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|public).*)',
+  ],
+};
