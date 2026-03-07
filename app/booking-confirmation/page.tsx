@@ -107,11 +107,13 @@ function BookingConfirmationContent() {
 
 export default function BookingConfirmationPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-[#0F0F0F] py-12 md:py-16 lg:py-20 px-4 md:px-6 flex items-center justify-center">
-        <div className="text-white">Loading...</div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0F0F0F] py-12 md:py-16 lg:py-20 px-4 md:px-6 flex items-center justify-center">
+          <div className="text-white">Loading...</div>
+        </div>
+      }
+    >
       <BookingConfirmationContent />
     </Suspense>
   );

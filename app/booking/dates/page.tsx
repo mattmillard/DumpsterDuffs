@@ -47,7 +47,9 @@ export default function BookingDatesPage() {
   }, [router]);
 
   const selectedSize = MOCK_SIZES.find((s) => s.id === selectedSizeId);
-  const pickupDate = calculatePickupDate(deliveryDate, rentalDays);
+  const pickupDate = deliveryDate
+    ? calculatePickupDate(deliveryDate, rentalDays)
+    : "";
   const priceEstimate = selectedSize
     ? calculatePriceEstimate(selectedSize, rentalDays)
     : null;
