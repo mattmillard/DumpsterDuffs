@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function BookingConfirmationPage() {
+function BookingConfirmationContent() {
   const searchParams = useSearchParams();
   const bookingId = searchParams.get("booking_id");
 
@@ -101,5 +102,17 @@ export default function BookingConfirmationPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BookingConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#0F0F0F] py-12 md:py-16 lg:py-20 px-4 md:px-6 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <BookingConfirmationContent />
+    </Suspense>
   );
 }

@@ -25,8 +25,8 @@ export const datesSchema = z
       const date = new Date(val);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      return date >= today;
-    }, "Delivery date must be today or in the future"),
+      return date > today;
+    }, "Delivery date must be in the future"),
     rental_duration_days: z
       .number()
       .int()
