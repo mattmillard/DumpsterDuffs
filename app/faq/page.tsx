@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { getLivePricingSnapshot } from "@/lib/utils/sitePricing";
 
 export const metadata: Metadata = {
   title: "FAQ | Dumpster Duff's",
@@ -6,14 +7,16 @@ export const metadata: Metadata = {
     "FAQs about dumpster rental and professional junk removal in Missouri. Find answers to your questions.",
 };
 
-export default function FAQ() {
+export default async function FAQ() {
+  const pricing = await getLivePricingSnapshot();
+
   const categories = [
     {
       title: "Pricing & Booking",
       faqs: [
         {
           q: "How much does a dumpster rental cost?",
-          a: "Our 15-yard dumpster rental is $325 delivery + $5 per day. This includes up to 2 tons of disposal. Each additional ton over 2 tons is $75. Completely transparent pricing.",
+          a: `Our ${pricing.sizeYards}-yard dumpster rental is $${pricing.basePriceLabel} delivery + $${pricing.perDayPriceLabel} per day. This includes up to 2 tons of disposal. Each additional ton over 2 tons is $75. Completely transparent pricing.`,
         },
         {
           q: "Are there any hidden fees?",
@@ -105,7 +108,7 @@ export default function FAQ() {
         },
         {
           q: "Can I compare costs?",
-          a: "Dumpsters are great for known quantities over time: $325 delivery + $5/day. Junk removal is project-based pricing—call us for a free quote on your specific job. Often they're similar in price, but removal saves time & effort.",
+          a: `Dumpsters are great for known quantities over time: $${pricing.basePriceLabel} delivery + $${pricing.perDayPriceLabel}/day. Junk removal is project-based pricing—call us for a free quote on your specific job. Often they're similar in price, but removal saves time & effort.`,
         },
         {
           q: "What if I'm unsure which option is right?",

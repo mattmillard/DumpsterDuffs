@@ -1,4 +1,8 @@
-export default function DualServiceShowcase() {
+import { getLivePricingSnapshot } from "@/lib/utils/sitePricing";
+
+export default async function DualServiceShowcase() {
+  const pricing = await getLivePricingSnapshot();
+
   return (
     <section className="bg-[#1A1A1A] py-16 lg:py-20 border-t border-[#404040]">
       <div className="container-custom">
@@ -101,11 +105,14 @@ export default function DualServiceShowcase() {
             <div className="bg-[#1A1A1A] rounded-lg p-4 mb-6">
               <p className="text-sm text-[#808080] mb-1">Starting from</p>
               <p className="text-2xl font-bold text-white">
-                $325{" "}
+                ${pricing.basePriceLabel}{" "}
                 <span className="text-lg text-[#999999] font-normal">
                   delivery
                 </span>{" "}
-                + <span className="text-primary">$5</span>
+                +{" "}
+                <span className="text-primary">
+                  ${pricing.perDayPriceLabel}
+                </span>
                 <span className="text-[#999999]">/day</span>
               </p>
             </div>

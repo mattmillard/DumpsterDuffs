@@ -1,9 +1,19 @@
-export default function FAQTeaser() {
-  const faqs = [
+import { ReactNode } from "react";
+import { getLivePricingSnapshot } from "@/lib/utils/sitePricing";
+
+type FAQItem = {
+  question: string;
+  answer: ReactNode;
+  schema: boolean;
+};
+
+export default async function FAQTeaser() {
+  const pricing = await getLivePricingSnapshot();
+
+  const faqs: FAQItem[] = [
     {
       question: "How much does a dumpster rental cost in Missouri?",
-      answer:
-        "Our 15-yard dumpster rental is $325 delivery + $5 per day. This includes up to 2 tons of disposal. Each additional ton is $75. No hidden fees—transparent pricing, every time.",
+      answer: `Our ${pricing.sizeYards}-yard dumpster rental is $${pricing.basePriceLabel} delivery + $${pricing.perDayPriceLabel} per day. This includes up to 2 tons of disposal. Each additional ton is $75. No hidden fees—transparent pricing, every time.`,
       schema: true,
     },
     {
@@ -14,14 +24,22 @@ export default function FAQTeaser() {
     },
     {
       question: "What size dumpster do I need for my project?",
-      answer:
-        "Our 15-yard dumpster is perfect for most residential projects including kitchen remodels, garage cleanouts, roofing jobs (up to 2,000 sq ft), and small deck removals. Call us if you need help determining the right fit.",
+      answer: `Our ${pricing.sizeYards}-yard dumpster is perfect for most residential projects including kitchen remodels, garage cleanouts, roofing jobs (up to 2,000 sq ft), and small deck removals. Call us if you need help determining the right fit.`,
       schema: true,
     },
     {
       question: "Do you offer professional junk removal?",
-      answer:
-        "Yes! We have licensed, insured crews that handle estate cleanouts, basement removals, storm debris, and bulk hauling. We load, haul, and dispose—no lifting required. Call <a href='tel:+15733564272' class='text-primary hover:underline'>(573) 356-4272</a> for a free quote.",
+      answer: (
+        <>
+          Yes! We have licensed, insured crews that handle estate cleanouts,
+          basement removals, storm debris, and bulk hauling. We load, haul, and
+          dispose—no lifting required. Call{" "}
+          <a href="tel:+15733564272" className="text-primary hover:underline">
+            (573) 356-4272
+          </a>{" "}
+          for a free quote.
+        </>
+      ),
       schema: true,
     },
     {

@@ -8,8 +8,8 @@ export const MOCK_SIZES: DumpsterSizeOption[] = [
     size_yards: 15,
     name: "15 Yard",
     description: "Our most popular size for medium projects",
-    price_base: 349.99,
-    price_per_day: 30,
+    price_base: 325,
+    price_per_day: 5,
     dimensions: { length: 17, width: 8, height: 4 },
     ideal_for: [
       "Kitchen/bathroom remodels",

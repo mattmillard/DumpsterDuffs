@@ -1,8 +1,11 @@
 import Image from "next/image";
+import { getLivePricingSnapshot } from "@/lib/utils/sitePricing";
 
-export default function SizeOverview() {
+export default async function SizeOverview() {
+  const pricing = await getLivePricingSnapshot();
+
   const dumpsterInfo = {
-    size: "15 Yard",
+    size: pricing.sizeName,
     dimensions: "16' L × 8' W × 4' H",
     idealFor: [
       "Kitchen or bathroom remodels",
@@ -13,7 +16,7 @@ export default function SizeOverview() {
       "Estate cleanouts",
     ],
     weight: "Up to 2 tons included",
-    price: "$325 + $5/day",
+    price: `$${pricing.basePriceLabel} + $${pricing.perDayPriceLabel}/day`,
   };
 
   return (

@@ -1,12 +1,18 @@
 import { Metadata } from "next";
+import { getLivePricingSnapshot } from "@/lib/utils/sitePricing";
 
-export const metadata: Metadata = {
-  title: "Dumpster Sizes & Pricing | Dumpster Duff's",
-  description:
-    "Transparent dumpster rental pricing in Missouri. Our 15-yard dumpster is $325 delivery + $5/day with no hidden fees. Same-day delivery in Columbia.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const pricing = await getLivePricingSnapshot();
 
-export default function SizesPricing() {
+  return {
+    title: "Dumpster Sizes & Pricing | Dumpster Duff's",
+    description: `Transparent dumpster rental pricing in Missouri. Our ${pricing.sizeYards}-yard dumpster is $${pricing.basePriceLabel} delivery + $${pricing.perDayPriceLabel}/day with no hidden fees. Same-day delivery in Columbia.`,
+  };
+}
+
+export default async function SizesPricing() {
+  const pricing = await getLivePricingSnapshot();
+
   return (
     <div className="min-h-screen bg-secondary pt-24 pb-12">
       <div className="container-custom">
@@ -24,7 +30,7 @@ export default function SizesPricing() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h2 className="text-3xl font-bold text-white mb-4">
-                  15-Yard Dumpster
+                  {pricing.sizeYards}-Yard Dumpster
                 </h2>
                 <div className="space-y-4 mb-8">
                   <div>
@@ -54,13 +60,13 @@ export default function SizesPricing() {
                   <div className="mb-4">
                     <div className="mb-2">
                       <span className="text-4xl font-bold text-primary">
-                        $325
+                        ${pricing.basePriceLabel}
                       </span>
                       <span className="text-white/70 ml-2">delivery fee</span>
                     </div>
                     <div>
                       <span className="text-4xl font-bold text-primary">
-                        $5
+                        ${pricing.perDayPriceLabel}
                       </span>
                       <span className="text-white/70 ml-2">per day</span>
                     </div>
@@ -72,7 +78,7 @@ export default function SizesPricing() {
                     <br />✓ No hidden fees
                   </p>
                 </div>
-                <a href="#book-now" className="btn-primary w-full text-center">
+                <a href="/booking" className="btn-primary w-full text-center">
                   Book Now
                 </a>
               </div>
@@ -178,7 +184,7 @@ export default function SizesPricing() {
               to confirm.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="#book-now" className="btn-primary">
+              <a href="/booking" className="btn-primary">
                 Book Now
               </a>
               <a href="tel:+15733564272" className="btn-secondary">

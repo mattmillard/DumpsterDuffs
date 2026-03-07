@@ -1,8 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { StickyCTA } from "@/components/StickyCTA";
+import { ConditionalLayout } from "@/components/ConditionalLayout";
 
 export const metadata: Metadata = {
   title: "Dumpster Duff's | Affordable 15-Yard Dumpster Rentals in Missouri",
@@ -51,10 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-body">
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <StickyCTA />
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   );

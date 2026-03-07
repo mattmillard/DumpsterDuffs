@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "How It Works | Dumpster Duff's",
@@ -7,12 +8,27 @@ export const metadata: Metadata = {
 };
 
 export default function HowItWorks() {
-  const steps = [
+  type Step = {
+    number: string;
+    title: string;
+    description: ReactNode;
+    details: string[];
+  };
+
+  const steps: Step[] = [
     {
       number: "1",
       title: "Book Online or Call",
-      description:
-        "Fill out our quick online form or call us at <a href='tel:+15733564272' class='text-primary hover:underline'>(573) 356-4272</a>. Takes less than 5 minutes. Tell us your project details and preferred delivery date.",
+      description: (
+        <>
+          Fill out our quick online form or call us at{" "}
+          <a href="tel:+15733564272" className="text-primary hover:underline">
+            (573) 356-4272
+          </a>
+          . Takes less than 5 minutes. Tell us your project details and
+          preferred delivery date.
+        </>
+      ),
       details: [
         "Choose your rental period (standard: 7 days)",
         "Tell us about your project",
@@ -152,7 +168,18 @@ export default function HowItWorks() {
               {[
                 {
                   q: "How do I book?",
-                  a: "You can book online using our form above, or call us at <a href='tel:+15733564272' class='text-primary hover:underline'>(573) 356-4272</a>. Both methods take just a few minutes.",
+                  a: (
+                    <>
+                      You can book online using our form above, or call us at{" "}
+                      <a
+                        href="tel:+15733564272"
+                        className="text-primary hover:underline"
+                      >
+                        (573) 356-4272
+                      </a>
+                      . Both methods take just a few minutes.
+                    </>
+                  ),
                 },
                 {
                   q: "What if I need delivery on a specific date?",
@@ -164,7 +191,18 @@ export default function HowItWorks() {
                 },
                 {
                   q: "Can I call instead of booking online?",
-                  a: "Absolutely! Call <a href='tel:+15733564272' class='text-primary hover:underline'>(573) 356-4272</a> and our team will book you right over the phone.",
+                  a: (
+                    <>
+                      Absolutely! Call{" "}
+                      <a
+                        href="tel:+15733564272"
+                        className="text-primary hover:underline"
+                      >
+                        (573) 356-4272
+                      </a>{" "}
+                      and our team will book you right over the phone.
+                    </>
+                  ),
                 },
               ].map((faq, idx) => (
                 <details
@@ -189,7 +227,7 @@ export default function HowItWorks() {
                       />
                     </svg>
                   </summary>
-                  <p className="mt-4 text-white/70">{faq.a}</p>
+                  <div className="mt-4 text-white/70">{faq.a}</div>
                 </details>
               ))}
             </div>
@@ -204,7 +242,7 @@ export default function HowItWorks() {
               Choose the button below to book your dumpster or give us a call.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="#book-now" className="btn-primary">
+              <a href="/booking" className="btn-primary">
                 Start Your Booking
               </a>
               <a href="tel:+15733564272" className="btn-secondary">

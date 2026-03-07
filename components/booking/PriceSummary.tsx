@@ -22,6 +22,10 @@ export function PriceSummary({
   total = 0,
   compact = false,
 }: PriceSummaryProps) {
+  const computedTotal =
+    Math.round((subtotal + deliveryFee + tax + Number.EPSILON) * 100) / 100;
+  const displayTotal = computedTotal;
+
   if (compact) {
     return (
       <div className="bg-primary/10 border border-primary/30 rounded-lg p-4">
@@ -29,7 +33,7 @@ export function PriceSummary({
           Estimated Total
         </p>
         <p className="text-3xl font-bold text-primary">
-          {formatCurrency(total)}
+          {formatCurrency(displayTotal)}
         </p>
       </div>
     );
@@ -61,12 +65,10 @@ export function PriceSummary({
               <span>{formatCurrency(subtotal)}</span>
             </div>
 
-            {deliveryFee > 0 && (
-              <div className="flex justify-between text-white text-sm mb-2">
-                <span className="text-[#999999]">Delivery Fee</span>
-                <span>{formatCurrency(deliveryFee)}</span>
-              </div>
-            )}
+            <div className="flex justify-between text-white text-sm mb-2">
+              <span className="text-[#999999]">Delivery Fee</span>
+              <span>{formatCurrency(deliveryFee)}</span>
+            </div>
 
             {tax > 0 && (
               <div className="flex justify-between text-white text-sm mb-2">
@@ -82,7 +84,7 @@ export function PriceSummary({
       <div className="flex justify-between items-center pt-4">
         <span className="font-semibold text-white">Total Due</span>
         <span className="text-3xl font-bold text-primary">
-          {formatCurrency(total)}
+          {formatCurrency(displayTotal)}
         </span>
       </div>
 

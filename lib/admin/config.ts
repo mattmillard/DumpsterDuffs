@@ -29,12 +29,36 @@ type InventoryItem = {
 
 const DEFAULT_PRICING: PricingItem[] = [
   {
+    id: "size-10",
+    name: "10 Yard",
+    size_yards: 10,
+    price_base: 275,
+    price_per_day: 5,
+    is_active: false,
+  },
+  {
     id: "size-15",
     name: "15 Yard",
     size_yards: 15,
-    price_base: 349.99,
-    price_per_day: 30,
+    price_base: 325,
+    price_per_day: 5,
     is_active: true,
+  },
+  {
+    id: "size-20",
+    name: "20 Yard",
+    size_yards: 20,
+    price_base: 375,
+    price_per_day: 5,
+    is_active: false,
+  },
+  {
+    id: "size-30",
+    name: "30 Yard",
+    size_yards: 30,
+    price_base: 475,
+    price_per_day: 5,
+    is_active: false,
   },
 ];
 
@@ -57,13 +81,75 @@ const DEFAULT_ZONES: ServiceZone[] = [
 
 const DEFAULT_INVENTORY: InventoryItem[] = [
   {
-    id: crypto.randomUUID(),
+    id: "size-10",
+    name: "10 Yard",
+    total_units: 0,
+    available_units: 0,
+    is_active: false,
+  },
+  {
+    id: "size-15",
     name: "15 Yard",
     total_units: 12,
     available_units: 9,
     is_active: true,
   },
+  {
+    id: "size-20",
+    name: "20 Yard",
+    total_units: 0,
+    available_units: 0,
+    is_active: false,
+  },
+  {
+    id: "size-30",
+    name: "30 Yard",
+    total_units: 0,
+    available_units: 0,
+    is_active: false,
+  },
 ];
+
+function mergeById<T extends { id: string }>(
+  defaults: T[],
+  existing: T[],
+): T[] {
+  const existingById = new Map(existing.map((item) => [item.id, item]));
+  const mergedDefaults = defaults.map((item) => ({
+    ...item,
+    ...existingById.get(item.id),
+  }));
+  const customItems = existing.filter(
+    (item) => !defaults.some((defaultItem) => defaultItem.id === item.id),
+  );
+  return [...mergedDefaults, ...customItems];
+}
+
+function normalizePricing(pricing: PricingItem[]): PricingItem[] {
+  const hasLegacySingleSize =
+    pricing.length === 1 &&
+    pricing[0]?.id === "size-15" &&
+    Number(pricing[0]?.price_base) === 349.99 &&
+    Number(pricing[0]?.price_per_day) === 30;
+
+  const normalizedInput = hasLegacySingleSize
+    ? pricing.map((item) =>
+        item.id === "size-15"
+          ? {
+              ...item,
+              price_base: 325,
+              price_per_day: 5,
+            }
+          : item,
+      )
+    : pricing;
+
+  return mergeById(DEFAULT_PRICING, normalizedInput);
+}
+
+function normalizeInventory(inventory: InventoryItem[]): InventoryItem[] {
+  return mergeById(DEFAULT_INVENTORY, inventory);
+}
 
 async function ensureBucket() {
   const { data: buckets, error: listError } =
@@ -131,7 +217,17 @@ async function writeConfigFile<T>(path: string, value: T): Promise<void> {
 }
 
 export async function getPricingConfig() {
-  return readConfigFile<PricingItem[]>("pricing.json", DEFAULT_PRICING);
+  const pricing = await readConfigFile<PricingItem[]>(
+    "pricing.json",
+    DEFAULT_PRICING,
+  );
+  const normalized = normalizePricing(pricing);
+
+  if (JSON.stringify(pricing) !== JSON.stringify(normalized)) {
+    await writeConfigFile("pricing.json", normalized);
+  }
+
+  return normalized;
 }
 
 export async function setPricingConfig(value: PricingItem[]) {
@@ -147,7 +243,17 @@ export async function setZonesConfig(value: ServiceZone[]) {
 }
 
 export async function getInventoryConfig() {
-  return readConfigFile<InventoryItem[]>("inventory.json", DEFAULT_INVENTORY);
+  const inventory = await readConfigFile<InventoryItem[]>(
+    "inventory.json",
+    DEFAULT_INVENTORY,
+  );
+  const normalized = normalizeInventory(inventory);
+
+  if (JSON.stringify(inventory) !== JSON.stringify(normalized)) {
+    await writeConfigFile("inventory.json", normalized);
+  }
+
+  return normalized;
 }
 
 export async function setInventoryConfig(value: InventoryItem[]) {

@@ -84,7 +84,7 @@ export default function BookingReviewPage() {
         customer_company: company,
         placement_notes: notes,
         subtotal: priceEstimate?.subtotal || 0,
-        delivery_fee: priceEstimate?.delivery_fee || 0,
+        delivery_fee: priceEstimate?.deliveryFee || 0, // Map from camelCase to snake_case
         tax: priceEstimate?.tax || 0,
         total: priceEstimate?.total || 0,
       };
@@ -107,6 +107,31 @@ export default function BookingReviewPage() {
     setError("");
     setIsLoading(true);
     try {
+      // Validate availability and blacklist before proceeding
+      const checkResponse = await fetch("/api/public/booking-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          delivery_date: bookingData.delivery_date,
+          size_yards: selectedSize?.size_yards,
+          customer_phone: bookingData.customer_phone,
+          customer_email: bookingData.customer_email,
+          customer_name: bookingData.customer_full_name,
+          delivery_address_line_1: bookingData.delivery_address_line_1,
+        }),
+      });
+
+      const checkResult = await checkResponse.json();
+
+      if (!checkResult.bookable) {
+        setError(
+          checkResult.message ||
+            "This date/size combination is not available. Please select a different date.",
+        );
+        setIsLoading(false);
+        return;
+      }
+
       // TODO: Integrate with Stripe checkout
       // For now, show a placeholder
       console.log("Booking data:", bookingData);

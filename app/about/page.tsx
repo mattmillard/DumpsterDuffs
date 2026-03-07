@@ -133,7 +133,7 @@ export default function About() {
               Let us show you what customer-focused dumpster rental looks like.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="#book-now" className="btn-primary">
+              <a href="/booking" className="btn-primary">
                 Book Now
               </a>
               <a href="tel:+15733564272" className="btn-secondary">

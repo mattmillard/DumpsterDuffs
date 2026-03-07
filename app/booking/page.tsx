@@ -30,7 +30,13 @@ export default function BookingSizePage() {
       const data = (await response.json()) as DumpsterSizeOption[];
       setSizes(data || []);
 
-      if (data.length > 0) {
+      // Find first active size as default
+      const firstActiveSize = data.find((size) => size.is_active !== false);
+      if (firstActiveSize) {
+        setSelectedSizeId(firstActiveSize.id);
+        sessionStorage.setItem("booking_size_id", firstActiveSize.id);
+      } else if (data.length > 0) {
+        // Fallback to first size if none are active
         setSelectedSizeId(data[0].id);
         sessionStorage.setItem("booking_size_id", data[0].id);
       }

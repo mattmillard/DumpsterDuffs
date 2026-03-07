@@ -9,22 +9,32 @@ interface SizeCardProps {
 }
 
 export function SizeCard({ size, isSelected, onSelect }: SizeCardProps) {
+  const isDisabled = size.is_active === false;
+
   return (
     <div
-      onClick={() => onSelect(size.id)}
-      className={`p-6 rounded-lg cursor-pointer transition-all duration-200 border-2 ${
-        isSelected
-          ? "border-primary bg-primary/10 shadow-lg"
-          : "border-[#404040] bg-[#1A1A1A] hover:border-primary/50 hover:shadow-md"
+      onClick={() => !isDisabled && onSelect(size.id)}
+      className={`p-6 rounded-lg transition-all duration-200 border-2 relative ${
+        isDisabled
+          ? "border-[#404040] bg-[#0D0D0D] opacity-60 cursor-not-allowed"
+          : isSelected
+            ? "border-primary bg-primary/10 shadow-lg cursor-pointer"
+            : "border-[#404040] bg-[#1A1A1A] hover:border-primary/50 hover:shadow-md cursor-pointer"
       }`}
     >
+      {isDisabled && (
+        <div className="absolute top-4 right-4 bg-[#404040] text-white text-xs font-bold px-3 py-1 rounded-full">
+          UNAVAILABLE
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-2xl font-bold text-white mb-1">{size.name}</h3>
           <p className="text-sm text-[#999999]">{size.description}</p>
         </div>
-        {isSelected && (
+        {isSelected && !isDisabled && (
           <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
             <svg
               className="w-4 h-4 text-white"
@@ -74,7 +84,7 @@ export function SizeCard({ size, isSelected, onSelect }: SizeCardProps) {
           ${size.price_base.toFixed(2)}
         </p>
         <p className="text-xs text-[#999999] mt-2">
-          ${size.price_per_day.toFixed(2)}/day after 7-day rental
+          ${size.price_per_day.toFixed(2)}/day after 3-day rental
         </p>
       </div>
     </div>

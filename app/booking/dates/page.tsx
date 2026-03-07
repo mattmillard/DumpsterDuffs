@@ -39,14 +39,15 @@ export default function BookingDatesPage() {
       const data = (await response.json()) as DumpsterSizeOption[];
       setSizes(data || []);
 
-      const defaultId = data[0]?.id || "";
+      const activeSizes = data.filter((size) => size.is_active !== false);
+      const defaultId = activeSizes[0]?.id || data[0]?.id || "";
       const sizeId = sessionStorage.getItem("booking_size_id") || defaultId;
       const validSizeId = data.some((size) => size.id === sizeId)
         ? sizeId
         : defaultId;
 
       if (!validSizeId) {
-        setError("No active dumpster sizes are available.");
+        setError("No dumpster sizes are available.");
         return;
       }
 

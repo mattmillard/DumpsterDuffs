@@ -1,4 +1,8 @@
-export default function Hero() {
+import { getLivePricingSnapshot } from "@/lib/utils/sitePricing";
+
+export default async function Hero() {
+  const pricing = await getLivePricingSnapshot();
+
   return (
     <section className="bg-gradient-to-br from-[#0F0F0F] via-[#1A1A1A] to-primary/10 pt-8 pb-16 lg:pt-12 lg:pb-20">
       <div className="container-custom">
@@ -53,7 +57,8 @@ export default function Hero() {
                   Rent a Dumpster
                 </a>
                 <p className="text-xs text-[#666666] mt-2">
-                  From $325 delivery + $5/day
+                  From ${pricing.basePriceLabel} delivery + $
+                  {pricing.perDayPriceLabel}/day
                 </p>
               </div>
               <div>
@@ -156,13 +161,17 @@ export default function Hero() {
                       Perfect Size for Most Projects
                     </p>
                     <p className="text-2xl font-bold text-white">
-                      15 Yard Dumpster
+                      {pricing.sizeName} Dumpster
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-[#999999]">From</p>
-                    <p className="text-3xl font-bold text-primary">$325</p>
-                    <p className="text-xs text-[#808080]">+ $5/day</p>
+                    <p className="text-3xl font-bold text-primary">
+                      ${pricing.basePriceLabel}
+                    </p>
+                    <p className="text-xs text-[#808080]">
+                      + ${pricing.perDayPriceLabel}/day
+                    </p>
                   </div>
                 </div>
               </div>

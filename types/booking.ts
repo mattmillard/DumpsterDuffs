@@ -16,6 +16,7 @@ export interface DumpsterSizeOption {
     height: number;
   };
   ideal_for: string[];
+  is_active?: boolean; // Indicates if size is currently available for booking
 }
 
 export interface BookingFormData {
@@ -61,7 +62,7 @@ export interface BookingState {
 
 export interface PriceEstimate {
   subtotal: number;
-  delivery_fee: number;
+  deliveryFee: number; // camelCase to match component props
   tax: number;
   total: number;
   formula?: string; // For transparency

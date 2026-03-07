@@ -61,6 +61,61 @@ export default function AdminPricingPage() {
     await loadPricing();
   };
 
+  const addSize = async () => {
+    const yards = prompt("Size in yards (example: 20)");
+    if (yards === null) return;
+
+    const sizeYards = Number(yards);
+    if (!Number.isFinite(sizeYards) || sizeYards <= 0) {
+      alert("Please enter a valid yard size.");
+      return;
+    }
+
+    const name = prompt("Display name", `${sizeYards} Yard`);
+    if (name === null) return;
+    if (!name.trim()) {
+      alert("Name is required.");
+      return;
+    }
+
+    const base = prompt("Base price", "0");
+    if (base === null) return;
+
+    const extra = prompt("Extra day price", "0");
+    if (extra === null) return;
+
+    const basePrice = Number(base);
+    const extraDayPrice = Number(extra);
+
+    if (!Number.isFinite(basePrice) || basePrice < 0) {
+      alert("Please enter a valid base price.");
+      return;
+    }
+
+    if (!Number.isFinite(extraDayPrice) || extraDayPrice < 0) {
+      alert("Please enter a valid extra day price.");
+      return;
+    }
+
+    const isActive = confirm(
+      "Enable this size now? Click Cancel to create it disabled.",
+    );
+
+    await fetch("/api/admin/pricing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: name.trim(),
+        size_yards: sizeYards,
+        price_base: basePrice,
+        price_per_day: extraDayPrice,
+        is_active: isActive,
+      }),
+    });
+
+    await loadPricing();
+  };
+
   const rows = pricing.map((item) => ({
     ...item,
     size: item.name,
@@ -76,9 +131,14 @@ export default function AdminPricingPage() {
           <h1 className="text-4xl font-bold text-white">Pricing</h1>
           <p className="text-[#999999] mt-2">Live rates used sitewide</p>
         </div>
-        <AdminButton variant="secondary" onClick={loadPricing}>
-          Refresh
-        </AdminButton>
+        <div className="flex gap-3">
+          <AdminButton variant="primary" onClick={addSize}>
+            Add Size
+          </AdminButton>
+          <AdminButton variant="secondary" onClick={loadPricing}>
+            Refresh
+          </AdminButton>
+        </div>
       </div>
 
       <AdminTable
