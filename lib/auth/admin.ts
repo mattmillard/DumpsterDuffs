@@ -15,30 +15,31 @@ export async function getCurrentAdminUser(): Promise<AdminUser | null> {
       return null;
     }
 
-    // Fetch admin profile with role
-    const { data: profile, error } = await supabase
-      .from("profiles")
+    // Fetch admin profile from admin_users table
+    const { data: admin, error } = await supabase
+      .from("admin_users")
       .select("id, email, full_name, role, is_active, created_at, last_login")
-      .eq("user_id", session.user.id)
+      .eq("id", session.user.id)
       .single();
 
-    if (error || !profile) {
+    if (error || !admin) {
+      console.error("Admin user not found in admin_users table:", error);
       return null;
     }
 
-    // Check if user has admin role
-    if (!["admin", "owner", "dispatcher"].includes(profile.role)) {
-      return null; // Not an admin
+    // Check if user has admin role and is active
+    if (!["admin", "owner", "dispatcher"].includes(admin.role) || !admin.is_active) {
+      return null; // Not an admin or inactive
     }
 
     return {
-      id: profile.id,
-      email: profile.email,
-      full_name: profile.full_name || "",
-      role: profile.role as AdminRole,
-      is_active: profile.is_active,
-      created_at: profile.created_at,
-      last_login: profile.last_login,
+      id: admin.id,
+      email: admin.email,
+      full_name: admin.full_name || "",
+      role: admin.role as AdminRole,
+      is_active: admin.is_active,
+      created_at: admin.created_at,
+      last_login: admin.last_login,
     };
   } catch (error) {
     console.error("Error fetching admin user:", error);
