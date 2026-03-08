@@ -195,7 +195,7 @@ export default function HowItWorks() {
                 },
                 {
                   q: "What if I need to change my pickup date?",
-                  a: "No problem! Just call us before your scheduled pickup date, and we can reschedule at no additional cost.",
+                  a: "No problem! Just call us before your scheduled pickup date, and we can reschedule at no additional cost (subject to availability).",
                 },
                 {
                   q: "Can I call instead of booking online?",
