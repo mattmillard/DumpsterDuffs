@@ -118,8 +118,16 @@
     width: 100%;
     height: 100%;
     margin: 0;
+    padding: 0;
     opacity: 0;
     cursor: pointer;
+    background: none;
+    color: transparent;
+  }
+
+  /* Firefox date input */
+  .date-input-with-icon::-moz-calendar-picker-indicator {
+    opacity: 0;
   }
 
   .calendar-attention::-webkit-calendar-picker-indicator {
