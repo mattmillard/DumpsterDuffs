@@ -139,7 +139,7 @@ export default async function SizesPricing() {
                 },
                 {
                   q: "Can I keep the dumpster longer than 7 days?",
-                  a: "Absolutely! Extended rentals are available. Just let us know, and we can extend your rental for a small daily fee (typically $15-25/day depending on your area).",
+                  a: "Absolutely! Extended rentals are available. Just let us know and we can extend your rental.",
                 },
                 {
                   q: "Do you offer pickup/loading service?",

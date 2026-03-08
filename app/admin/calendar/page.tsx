@@ -145,7 +145,7 @@ export default function AdminCalendarPage() {
 
   const cancelBooking = async (bookingId: string) => {
     const reason = prompt("Reason for cancellation:");
-    if (!reason) return;
+    if (reason === null) return;
 
     await fetch("/api/admin/calendar", {
       method: "POST",
@@ -153,7 +153,7 @@ export default function AdminCalendarPage() {
       body: JSON.stringify({
         action: "cancel_booking",
         booking_id: bookingId,
-        reason,
+        reason: reason.trim() || undefined,
       }),
     });
 

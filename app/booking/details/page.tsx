@@ -11,6 +11,7 @@ import {
   FormTextarea,
   FormActions,
 } from "@/components/booking/FormComponents";
+import { maskPhoneInput } from "@/lib/utils/formatting";
 
 const STEPS = [
   { name: "size", label: "Size" },
@@ -81,6 +82,8 @@ export default function BookingDetailsPage() {
         <div className="space-y-6">
           <FormInput
             label="Full Name"
+            name="name"
+            autoComplete="name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             placeholder="John Smith"
@@ -90,6 +93,8 @@ export default function BookingDetailsPage() {
           <FormInput
             label="Email Address"
             type="email"
+            name="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="john@example.com"
@@ -99,14 +104,19 @@ export default function BookingDetailsPage() {
           <FormInput
             label="Phone Number"
             type="tel"
+            name="tel"
+            autoComplete="tel"
             value={phone}
-            onChange={(e) => setPhone(e.target.value.replace(/[^\d\-()]/g, ""))}
+            onChange={(e) => setPhone(maskPhoneInput(e.target.value))}
             placeholder="(555) 123-4567"
+            maxLength={14}
             required
           />
 
           <FormInput
             label="Company Name (Optional)"
+            name="organization"
+            autoComplete="organization"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             placeholder="Your Company"

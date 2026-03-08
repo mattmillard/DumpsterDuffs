@@ -79,36 +79,7 @@ const DEFAULT_ZONES: ServiceZone[] = [
   },
 ];
 
-const DEFAULT_INVENTORY: InventoryItem[] = [
-  {
-    id: "size-10",
-    name: "10 Yard",
-    total_units: 0,
-    available_units: 0,
-    is_active: false,
-  },
-  {
-    id: "size-15",
-    name: "15 Yard",
-    total_units: 12,
-    available_units: 9,
-    is_active: true,
-  },
-  {
-    id: "size-20",
-    name: "20 Yard",
-    total_units: 0,
-    available_units: 0,
-    is_active: false,
-  },
-  {
-    id: "size-30",
-    name: "30 Yard",
-    total_units: 0,
-    available_units: 0,
-    is_active: false,
-  },
-];
+const DEFAULT_INVENTORY: InventoryItem[] = [];
 
 function mergeById<T extends { id: string }>(
   defaults: T[],

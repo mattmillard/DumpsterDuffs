@@ -63,6 +63,19 @@ export default function AdminBookingsPage() {
     await loadBookings();
   };
 
+  const deleteBooking = async (booking: BookingRow) => {
+    const confirmed = window.confirm(
+      `Delete booking for ${booking.customer_name} on ${booking.delivery_date}? This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    await fetch(`/api/admin/bookings?id=${booking.id}`, {
+      method: "DELETE",
+    });
+
+    await loadBookings();
+  };
+
   const filtered = useMemo(() => {
     return bookings.filter((booking) => {
       const haystack =
@@ -129,12 +142,20 @@ export default function AdminBookingsPage() {
         ]}
         rows={rows}
         actions={(row) => (
-          <button
-            onClick={() => updateStatus(row as BookingRow)}
-            className="text-primary hover:text-primary-light text-sm font-medium"
-          >
-            Edit Status
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => updateStatus(row as BookingRow)}
+              className="text-primary hover:text-primary-light text-sm font-medium"
+            >
+              Edit Status
+            </button>
+            <button
+              onClick={() => deleteBooking(row as BookingRow)}
+              className="text-red-400 hover:text-red-300 text-sm font-medium"
+            >
+              Delete
+            </button>
+          </div>
         )}
       />
     </div>

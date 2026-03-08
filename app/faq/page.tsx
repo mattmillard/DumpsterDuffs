@@ -24,11 +24,11 @@ export default async function FAQ() {
         },
         {
           q: "Can I extend my rental?",
-          a: "Yes! Extended rentals are available. Just call us before your scheduled pickup date, and we can extend it for a small daily fee (~$15-25/day).",
+          a: "Yes! Extended rentals are available. Just call us before your scheduled pickup date and we can extend it.",
         },
         {
           q: "How do I book?",
-          a: "Book online using our form or call <a href='tel:+15733564272' class='text-primary hover:underline'>(573) 356-4272</a>. Both methods take just a few minutes.",
+          a: "Book online at <a href='/booking' class='text-primary hover:underline'>our booking page</a> or call <a href='tel:+15733564272' class='text-primary hover:underline'>(573) 356-4272</a>. Both methods take just a few minutes.",
         },
       ],
     },
@@ -49,7 +49,7 @@ export default async function FAQ() {
         },
         {
           q: "Can I change my pickup date?",
-          a: "Yes! Call us before your scheduled pickup to reschedule. Moving to a later date may increase your daily rental cost since you'll keep the dumpster longer.",
+          a: "Yes! Call us before your scheduled pickup to reschedule. We can adjust your pickup date based on your timeline.",
         },
       ],
     },

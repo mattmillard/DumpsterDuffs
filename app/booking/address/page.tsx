@@ -77,6 +77,8 @@ export default function BookingAddressPage() {
         <div className="space-y-6">
           <FormInput
             label="Street Address"
+            name="address-line1"
+            autoComplete="address-line1"
             value={addressLine1}
             onChange={(e) => setAddressLine1(e.target.value)}
             placeholder="123 Main Street"
@@ -85,6 +87,8 @@ export default function BookingAddressPage() {
 
           <FormInput
             label="Apartment, Suite, etc."
+            name="address-line2"
+            autoComplete="address-line2"
             value={addressLine2}
             onChange={(e) => setAddressLine2(e.target.value)}
             placeholder="Apt 4B (optional)"
@@ -93,6 +97,8 @@ export default function BookingAddressPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <FormInput
               label="City"
+              name="address-level2"
+              autoComplete="address-level2"
               value={city}
               onChange={(e) => setCity(e.target.value)}
               placeholder="Columbia"
@@ -101,6 +107,8 @@ export default function BookingAddressPage() {
 
             <FormInput
               label="State"
+              name="address-level1"
+              autoComplete="address-level1"
               value={state}
               onChange={(e) => setState(e.target.value.toUpperCase())}
               maxLength={2}
@@ -110,6 +118,8 @@ export default function BookingAddressPage() {
 
           <FormInput
             label="ZIP Code"
+            name="postal-code"
+            autoComplete="postal-code"
             value={zip}
             onChange={(e) => setZip(e.target.value)}
             placeholder="65201"
