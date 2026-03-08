@@ -28,6 +28,8 @@ export default function BookingDatesPage() {
   const router = useRouter();
   const [deliveryDate, setDeliveryDate] = useState("");
   const [rentalDays, setRentalDays] = useState(3);
+  const [hasInteractedWithDateInputs, setHasInteractedWithDateInputs] =
+    useState(false);
   const [sizes, setSizes] = useState<DumpsterSizeOption[]>([]);
   const [selectedSizeId, setSelectedSizeId] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -183,9 +185,25 @@ export default function BookingDatesPage() {
               label="Delivery Date"
               type="date"
               value={deliveryDate}
-              onChange={(e) => setDeliveryDate(e.target.value)}
+              onFocus={() => setHasInteractedWithDateInputs(true)}
+              onClick={(e) => {
+                const input = e.currentTarget as HTMLInputElement & {
+                  showPicker?: () => void;
+                };
+
+                setHasInteractedWithDateInputs(true);
+                input.focus();
+                input.showPicker?.();
+              }}
+              onChange={(e) => {
+                setHasInteractedWithDateInputs(true);
+                setDeliveryDate(e.target.value);
+              }}
               min={getMinimumDeliveryDate(1)}
               max={getMaximumDeliveryDate(90)}
+              className={
+                hasInteractedWithDateInputs ? "" : "calendar-attention"
+              }
               required
             />
 
@@ -200,9 +218,11 @@ export default function BookingDatesPage() {
                   min="1"
                   max="365"
                   value={rentalDays}
-                  onChange={(e) =>
-                    setRentalDays(Math.max(1, parseInt(e.target.value) || 0))
-                  }
+                  onFocus={() => setHasInteractedWithDateInputs(true)}
+                  onChange={(e) => {
+                    setHasInteractedWithDateInputs(true);
+                    setRentalDays(Math.max(1, parseInt(e.target.value) || 0));
+                  }}
                   className="input-field flex-1 text-center"
                 />
                 <span className="text-white font-semibold whitespace-nowrap">

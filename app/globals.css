@@ -102,6 +102,39 @@
     text-wrap: balance;
   }
 
+  .input-field[type="date"] {
+    color-scheme: dark;
+  }
+
+  .input-field[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.2);
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  .calendar-attention::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.25)
+      drop-shadow(0 0 4px var(--color-primary-light));
+    opacity: 1;
+    animation: calendarGlow 1.6s ease-in-out infinite;
+    transition:
+      filter 0.3s ease,
+      opacity 0.3s ease;
+  }
+
+  @keyframes calendarGlow {
+    0%,
+    100% {
+      filter: invert(1) brightness(1.15)
+        drop-shadow(0 0 2px var(--color-primary-light));
+    }
+
+    50% {
+      filter: invert(1) brightness(1.45)
+        drop-shadow(0 0 8px var(--color-primary-light));
+    }
+  }
+
   /* Safe area support for notch/Dynamic Island */
   .safe-top {
     padding-top: env(safe-area-inset-top);
