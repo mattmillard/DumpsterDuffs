@@ -51,3 +51,30 @@ export async function PATCH(request: Request) {
     );
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Booking id is required" },
+        { status: 400 },
+      );
+    }
+
+    const { error } = await supabaseAdmin.from("bookings").delete().eq("id", id);
+
+    if (error) {
+      throw error;
+    }
+
+    return NextResponse.json({ success: true, id });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to delete booking" },
+      { status: 500 },
+    );
+  }
+}
