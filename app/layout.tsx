@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",
-    apple: "/apple-touch-icon.png",
+    apple: "/logo.png",
   },
   openGraph: {
     title:
