@@ -21,7 +21,11 @@ export default function HowItWorks() {
       title: "Book Online or Call",
       description: (
         <>
-          Fill out our quick online form or call us at{" "}
+          Fill out our quick{" "}
+          <a href="/booking" className="text-primary hover:underline">
+            online form
+          </a>{" "}
+          or call us at{" "}
           <a href="tel:+15733564272" className="text-primary hover:underline">
             (573) 356-4272
           </a>
@@ -170,7 +174,11 @@ export default function HowItWorks() {
                   q: "How do I book?",
                   a: (
                     <>
-                      You can book online using our form above, or call us at{" "}
+                      You can{" "}
+                      <a href="/booking" className="text-primary hover:underline">
+                        book online
+                      </a>{" "}
+                      or call us at{" "}
                       <a
                         href="tel:+15733564272"
                         className="text-primary hover:underline"
