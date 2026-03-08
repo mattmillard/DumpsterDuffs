@@ -43,16 +43,34 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    const body = (await request.json()) as ServiceZone;
+    const body = (await request.json()) as Partial<ServiceZone>;
+
+    if (!body?.id) {
+      return NextResponse.json({ error: "Zone id is required" }, { status: 400 });
+    }
+
+    const deliveryFee = Number(body.delivery_fee);
+    if (!Number.isFinite(deliveryFee) || deliveryFee < 0) {
+      return NextResponse.json(
+        { error: "Delivery fee must be a valid non-negative number" },
+        { status: 400 },
+      );
+    }
+
     const zones = await getZonesConfig();
+    const existingIndex = zones.findIndex((zone) => zone.id === body.id);
+
+    if (existingIndex === -1) {
+      return NextResponse.json({ error: "Zone not found" }, { status: 404 });
+    }
 
     const updated = zones.map((zone) =>
       zone.id === body.id
         ? {
             ...zone,
-            name: body.name,
-            zone_type: body.zone_type,
-            delivery_fee: Number(body.delivery_fee),
+            name: String(body.name ?? zone.name),
+            zone_type: String(body.zone_type ?? zone.zone_type),
+            delivery_fee: deliveryFee,
             is_active: Boolean(body.is_active),
           }
         : zone,
@@ -71,7 +89,17 @@ export async function PUT(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const { id } = (await request.json()) as { id: string };
+
+    if (!id) {
+      return NextResponse.json({ error: "Zone id is required" }, { status: 400 });
+    }
+
     const zones = await getZonesConfig();
+    const exists = zones.some((zone) => zone.id === id);
+    if (!exists) {
+      return NextResponse.json({ error: "Zone not found" }, { status: 404 });
+    }
+
     const updated = zones.filter((zone) => zone.id !== id);
 
     await setZonesConfig(updated);

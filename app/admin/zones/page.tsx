@@ -14,6 +14,8 @@ type Zone = {
 export default function AdminZonesPage() {
   const [zones, setZones] = useState<Zone[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   const loadZones = async () => {
     setLoading(true);
@@ -30,6 +32,28 @@ export default function AdminZonesPage() {
     loadZones();
   }, []);
 
+  const runZonesMutation = async (
+    request: Promise<Response>,
+    fallbackError: string,
+  ) => {
+    setSaving(true);
+    setError("");
+    try {
+      const response = await request;
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(result?.error || fallbackError);
+      }
+
+      setZones(Array.isArray(result) ? (result as Zone[]) : []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : fallbackError);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const createZone = async () => {
     const name = prompt("Zone name", "New Zone");
     if (!name) return;
@@ -38,18 +62,19 @@ export default function AdminZonesPage() {
     const fee = prompt("Delivery fee", "49.99");
     if (!fee) return;
 
-    await fetch("/api/admin/zones", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        zone_type: zoneType,
-        delivery_fee: Number(fee),
-        is_active: true,
+    await runZonesMutation(
+      fetch("/api/admin/zones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          zone_type: zoneType,
+          delivery_fee: Number(fee),
+          is_active: true,
+        }),
       }),
-    });
-
-    await loadZones();
+      "Failed to create zone",
+    );
   };
 
   const editZone = async (zone: Zone) => {
@@ -59,40 +84,43 @@ export default function AdminZonesPage() {
     const fee = prompt("Delivery fee", String(zone.delivery_fee));
     if (!fee) return;
 
-    await fetch("/api/admin/zones", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...zone,
-        name,
-        delivery_fee: Number(fee),
+    await runZonesMutation(
+      fetch("/api/admin/zones", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...zone,
+          name,
+          delivery_fee: Number(fee),
+        }),
       }),
-    });
-
-    await loadZones();
+      "Failed to update zone",
+    );
   };
 
   const toggleZone = async (zone: Zone) => {
-    await fetch("/api/admin/zones", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...zone, is_active: !zone.is_active }),
-    });
-
-    await loadZones();
+    await runZonesMutation(
+      fetch("/api/admin/zones", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...zone, is_active: !zone.is_active }),
+      }),
+      "Failed to update zone",
+    );
   };
 
   const deleteZone = async (zone: Zone) => {
     const confirmed = confirm(`Delete ${zone.name}?`);
     if (!confirmed) return;
 
-    await fetch("/api/admin/zones", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: zone.id }),
-    });
-
-    await loadZones();
+    await runZonesMutation(
+      fetch("/api/admin/zones", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: zone.id }),
+      }),
+      "Failed to delete zone",
+    );
   };
 
   const rows = zones.map((zone) => ({
@@ -110,9 +138,15 @@ export default function AdminZonesPage() {
           <p className="text-[#999999] mt-2">Live delivery zones and fees</p>
         </div>
         <AdminButton variant="primary" onClick={createZone}>
-          + New Zone
+          {saving ? "Saving..." : "+ New Zone"}
         </AdminButton>
       </div>
+
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+          <p className="text-sm text-red-400">{error}</p>
+        </div>
+      )}
 
       <AdminTable
         loading={loading}
