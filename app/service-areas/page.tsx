@@ -18,6 +18,8 @@ export default function ServiceAreas() {
     "Holts Summit",
     "Russellville",
     "California",
+    "Hallsville",
+    "Harrisburg",
     "Centralia",
     "Wardsville",
   ];

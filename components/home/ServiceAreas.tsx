@@ -11,6 +11,8 @@ export default function ServiceAreas() {
     { city: "Holts Summit", priority: "secondary" },
     { city: "Russellville", priority: "secondary" },
     { city: "California", priority: "secondary" },
+    { city: "Hallsville", priority: "secondary" },
+    { city: "Harrisburg", priority: "secondary" },
     { city: "Centralia", priority: "secondary" },
     { city: "Wardsville", priority: "secondary" },
   ];
