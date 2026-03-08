@@ -113,6 +113,7 @@ export default function BookingReviewPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           delivery_date: bookingData.delivery_date,
+          pickup_date: bookingData.pickup_date,
           size_yards: selectedSize?.size_yards,
           customer_phone: bookingData.customer_phone,
           customer_email: bookingData.customer_email,

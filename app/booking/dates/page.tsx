@@ -80,23 +80,23 @@ export default function BookingDatesPage() {
       setAvailabilityWarning("");
 
       try {
-        const response = await fetch(
-          `/api/public/availability?date=${deliveryDate}`,
-        );
-        const availability = await response.json();
+        const response = await fetch("/api/public/booking-check", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            delivery_date: deliveryDate,
+            pickup_date: pickupDate,
+            size_yards: selectedSize.size_yards,
+          }),
+        });
 
-        // Check if selected size is blocked
-        const sizeYards = selectedSize.size_yards;
-        const sizeAvailability = availability.sizes?.find(
-          (sa: any) => sa.size_yards === sizeYards,
-        );
+        const result = await response.json();
 
-        // Show warning if date is NOT bookable or has blocking reasons
-        if (sizeAvailability && !sizeAvailability.isBookable) {
-          const reason =
-            availability.blockedReasons?.[0] ||
-            "This date is not available for booking";
-          setAvailabilityWarning(reason);
+        if (!result.bookable) {
+          setAvailabilityWarning(
+            result.message ||
+              "This reservation range is unavailable. Choose different dates.",
+          );
         }
       } catch (err) {
         console.error("Error checking availability:", err);
@@ -104,7 +104,7 @@ export default function BookingDatesPage() {
     }
 
     checkAvailability();
-  }, [deliveryDate, selectedSize]);
+  }, [deliveryDate, pickupDate, selectedSize]);
 
   const handleBack = () => {
     router.push("/booking");
@@ -134,19 +134,22 @@ export default function BookingDatesPage() {
     setIsLoading(true);
     try {
       // Double-check availability before proceeding
-      const response = await fetch(
-        `/api/public/availability?date=${deliveryDate}`,
-      );
-      const availability = await response.json();
+      const response = await fetch("/api/public/booking-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          delivery_date: deliveryDate,
+          pickup_date: pickupDate,
+          size_yards: selectedSize?.size_yards,
+        }),
+      });
 
-      const sizeYards = selectedSize?.size_yards;
-      const sizeAvailability = availability.sizes?.find(
-        (sa: any) => sa.size_yards === sizeYards,
-      );
+      const checkResult = await response.json();
 
-      if (sizeAvailability && !sizeAvailability.isBookable) {
+      if (!checkResult.bookable) {
         setError(
-          "This date is no longer available. Please select a different date.",
+          checkResult.message ||
+            "This reservation range is no longer available. Please select different dates.",
         );
         setIsLoading(false);
         return;

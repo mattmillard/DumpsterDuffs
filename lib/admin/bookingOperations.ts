@@ -50,6 +50,8 @@ export type DayAvailability = {
     size_yards: number;
     label: string;
     capacity: number;
+    reservedUnits: number;
+    effectiveCapacity: number;
     activeBookings: number;
     isBlocked: boolean;
     isBookable: boolean;
@@ -310,16 +312,19 @@ export async function getCalendarSnapshot(
       const globalBlocked = blockedForDate.some(
         (blocked) => blocked.size_yards == null,
       );
-      const sizeBlocked = blockedForDate.some(
+      const reservedUnits = blockedForDate.filter(
         (blocked) => blocked.size_yards === sizeYards,
-      );
-      const isBlocked = globalBlocked || sizeBlocked;
-      const isBookable = !isBlocked && currentBooked < capacity;
+      ).length;
+      const effectiveCapacity = Math.max(0, capacity - reservedUnits);
+      const isBlocked = globalBlocked;
+      const isBookable = !globalBlocked && currentBooked < effectiveCapacity;
 
       return {
         size_yards: sizeYards,
         label: `${sizeYards} Yard`,
         capacity,
+        reservedUnits,
+        effectiveCapacity,
         activeBookings: currentBooked,
         isBlocked,
         isBookable,
@@ -592,22 +597,20 @@ export async function checkBookingCapacity(
   const dates = listDatesInRange(params.delivery_date, params.return_date);
 
   for (const date of dates) {
+    const isDeliveryOrPickupDate =
+      date === params.delivery_date || date === params.return_date;
+
     const blockedForDate = blockedDates.filter(
       (blocked) => blocked.date === date,
     );
     const globalBlocked = blockedForDate.some(
       (blocked) => blocked.size_yards == null,
     );
-    const sizeBlocked = blockedForDate.some(
-      (blocked) => blocked.size_yards === sizeYards,
-    );
 
-    if (globalBlocked || sizeBlocked) {
+    if (globalBlocked && isDeliveryOrPickupDate) {
       const reason =
-        blockedForDate.find(
-          (blocked) =>
-            blocked.size_yards == null || blocked.size_yards === sizeYards,
-        )?.reason || "This date is not available for booking.";
+        blockedForDate.find((blocked) => blocked.size_yards == null)?.reason ||
+        "This date is blocked for deliveries/pickups.";
 
       return {
         bookable: false,
@@ -617,17 +620,22 @@ export async function checkBookingCapacity(
       };
     }
 
+    const reservedUnits = blockedForDate.filter(
+      (blocked) => blocked.size_yards === sizeYards,
+    ).length;
+    const effectiveCapacity = Math.max(0, capacity - reservedUnits);
+
     const activeBookings = relevantBookings.filter((booking) =>
       bookingOccupiesDate(booking, date),
     ).length;
 
-    if (activeBookings >= capacity) {
+    if (activeBookings >= effectiveCapacity) {
       return {
         bookable: false,
         reason: "no_capacity",
-        message: `No units available for ${sizeYards}-yard dumpsters on ${date}.`,
+        message: `No units available for ${sizeYards}-yard dumpsters on ${date}. Choose an earlier pickup date or a different delivery date/size.`,
         conflictingDate: date,
-        capacity,
+        capacity: effectiveCapacity,
         activeBookings,
       };
     }
