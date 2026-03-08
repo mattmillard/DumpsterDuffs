@@ -29,14 +29,24 @@ export function formatDateLong(dateStr: string): string {
 
 export function formatPhoneNumber(phone: string): string {
   const cleaned = phone.replace(/\D/g, "");
-  if (cleaned.length === 10) {
-    return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+  const normalized =
+    cleaned.length > 10 && cleaned.startsWith("1")
+      ? cleaned.slice(1)
+      : cleaned;
+
+  if (normalized.length === 10) {
+    return `(${normalized.slice(0, 3)}) ${normalized.slice(3, 6)}-${normalized.slice(6)}`;
   }
   return phone;
 }
 
 export function maskPhoneInput(value: string): string {
-  const digits = value.replace(/\D/g, "").slice(0, 10);
+  const rawDigits = value.replace(/\D/g, "");
+  const normalized =
+    rawDigits.length > 10 && rawDigits.startsWith("1")
+      ? rawDigits.slice(1)
+      : rawDigits;
+  const digits = normalized.slice(0, 10);
 
   if (digits.length <= 3) {
     return digits;
