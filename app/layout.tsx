@@ -28,8 +28,8 @@ export const metadata: Metadata = {
     address: true,
   },
   icons: {
-    icon: "/icon-192.png",
-    shortcut: "/icon-192.png",
+    icon: "/logo.png",
+    shortcut: "/logo.png",
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
