@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { trackPhoneClick } from "@/lib/utils/analytics";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -66,6 +67,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-4">
             <a
               href="tel:+15733564272"
+              onClick={() => trackPhoneClick("(573) 356-4272")}
               className="text-primary font-bold text-lg hover:text-accent transition-colors"
             >
               (573) 356-4272
@@ -147,7 +149,10 @@ export default function Header() {
               </Link>
               <a
                 href="tel:+15733564272"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  trackPhoneClick("(573) 356-4272");
+                  setMobileMenuOpen(false);
+                }}
                 className="text-primary font-bold text-lg py-2"
               >
                 (573) 356-4272

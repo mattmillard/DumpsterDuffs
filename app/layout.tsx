@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
+import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 
 export const metadata: Metadata = {
   title: "Dumpster Duff's | Affordable 15-Yard Dumpster Rentals in Missouri",
@@ -49,6 +50,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-body">
+        <AnalyticsProvider />
         <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>

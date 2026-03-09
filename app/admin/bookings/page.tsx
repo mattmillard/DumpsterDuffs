@@ -87,11 +87,22 @@ export default function AdminBookingsPage() {
     );
     if (!confirmed) return;
 
-    await fetch(`/api/admin/bookings?id=${booking.id}`, {
-      method: "DELETE",
-    });
+    try {
+      const response = await fetch(`/api/admin/bookings?id=${booking.id}`, {
+        method: "DELETE",
+      });
 
-    await loadBookings();
+      if (!response.ok) {
+        const error = await response.json();
+        alert(`Failed to delete booking: ${error.error || "Unknown error"}`);
+        return;
+      }
+
+      await loadBookings();
+    } catch (error) {
+      alert("Failed to delete booking. Please try again.");
+      console.error("Delete error:", error);
+    }
   };
 
   const filtered = useMemo(() => {
@@ -192,7 +203,8 @@ export default function AdminBookingsPage() {
               Update Booking Status
             </h2>
             <p className="text-[#999999] mb-6">
-              Booking: {editingBooking.id.slice(0, 8)} • {editingBooking.customer_name}
+              Booking: {editingBooking.id.slice(0, 8)} •{" "}
+              {editingBooking.customer_name}
             </p>
 
             <div className="space-y-4 mb-6">
@@ -217,7 +229,9 @@ export default function AdminBookingsPage() {
             <div className="flex gap-3">
               <button
                 onClick={handleStatusUpdate}
-                disabled={isUpdating || selectedStatus === editingBooking.status}
+                disabled={
+                  isUpdating || selectedStatus === editingBooking.status
+                }
                 className="flex-1 bg-primary hover:bg-primary-dark disabled:bg-[#404040] disabled:text-[#999999] text-white font-medium py-2 px-4 rounded-lg transition-colors"
               >
                 {isUpdating ? "Updating..." : "Update Status"}

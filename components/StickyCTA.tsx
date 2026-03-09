@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { trackPhoneClick } from "@/lib/utils/analytics";
 
 export function StickyCTA() {
   const [isVisible, setIsVisible] = useState(false);
@@ -23,6 +24,7 @@ export function StickyCTA() {
         <div className="flex items-center gap-3">
           <a
             href="tel:+15733564272"
+            onClick={() => trackPhoneClick("(573) 356-4272")}
             className="flex-1 btn bg-primary text-white hover:bg-primary-dark min-h-[48px]"
           >
             <svg

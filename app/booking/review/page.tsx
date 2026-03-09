@@ -16,6 +16,7 @@ import {
   calculatePickupDate,
 } from "@/lib/utils/pricing";
 import { BookingFormData, DumpsterSizeOption } from "@/types/booking";
+import { trackFormComplete } from "@/lib/utils/analytics";
 
 const STEPS = [
   { name: "size", label: "Size" },
@@ -149,6 +150,13 @@ export default function BookingReviewPage() {
         setIsLoading(false);
         return;
       }
+
+      // Track form completion
+      await trackFormComplete("booking", {
+        booking_id: createResult.bookingId,
+        booking_number: createResult.bookingNumber,
+        total: bookingData.total,
+      });
 
       sessionStorage.clear();
       const params = new URLSearchParams({

@@ -347,7 +347,7 @@ export async function getCalendarSnapshot(
     setupRequired: false,
     blockedDates,
     blacklist,
-    bookings: bookings.map((booking) => ({
+    bookings: activeBookings.map((booking) => ({
       ...booking,
       total_price: Number(booking.total_price || 0),
     })),

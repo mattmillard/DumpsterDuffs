@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { trackFormStep } from "@/lib/utils/analytics";
 import {
   BookingProgressBar,
   BookingContainer,
@@ -159,6 +160,9 @@ export default function BookingDatesPage() {
       sessionStorage.setItem("booking_delivery_date", deliveryDate);
       sessionStorage.setItem("booking_rental_days", rentalDays.toString());
       sessionStorage.setItem("booking_pickup_date", pickupDate);
+
+      // Track form step
+      trackFormStep("booking", 2, "dates");
 
       router.push("/booking/address");
     } catch (err) {

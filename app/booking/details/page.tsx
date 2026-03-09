@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { trackFormStep } from "@/lib/utils/analytics";
 import {
   BookingProgressBar,
   BookingContainer,
@@ -57,6 +58,9 @@ export default function BookingDetailsPage() {
       sessionStorage.setItem("booking_phone", phone);
       sessionStorage.setItem("booking_company", company);
       sessionStorage.setItem("booking_notes", notes);
+
+      // Track form step
+      trackFormStep("booking", 4, "details");
 
       router.push("/booking/review");
     } catch (err) {

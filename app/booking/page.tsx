@@ -9,6 +9,7 @@ import {
 import { SizeSelection } from "@/components/booking/SizeSelection";
 import { FormActions } from "@/components/booking/FormComponents";
 import { DumpsterSizeOption } from "@/types/booking";
+import { trackFormStart, trackFormStep } from "@/lib/utils/analytics";
 
 const STEPS = [
   { name: "size", label: "Size" },
@@ -43,6 +44,9 @@ export default function BookingSizePage() {
     }
 
     loadSizes();
+
+    // Track form start
+    trackFormStart("booking");
   }, []);
 
   const handleSelectSize = (sizeId: string) => {
@@ -57,6 +61,9 @@ export default function BookingSizePage() {
       // Store selected size in session/state
       // TODO: Use server action or context to persist state
       sessionStorage.setItem("booking_size_id", selectedSizeId);
+
+      // Track form step
+      trackFormStep("booking", 1, "size");
 
       // Navigate to next step
       router.push("/booking/dates");

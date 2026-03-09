@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { trackFormStep } from "@/lib/utils/analytics";
 import {
   BookingProgressBar,
   BookingContainer,
@@ -144,6 +145,9 @@ export default function BookingAddressPage() {
       sessionStorage.setItem("booking_city", city);
       sessionStorage.setItem("booking_state", state);
       sessionStorage.setItem("booking_zip", zip);
+
+      // Track form step
+      trackFormStep("booking", 3, "address");
 
       router.push("/booking/details");
     } catch (err) {
