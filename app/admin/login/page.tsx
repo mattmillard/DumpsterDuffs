@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { adminLogin } from "@/lib/auth/admin";
 
 export default function AdminLoginPage() {
   return (
@@ -40,16 +41,15 @@ function AdminLoginForm() {
     }
 
     try {
-      const isValidDemoLogin =
-        submittedEmail === "admin@example.com" &&
-        submittedPassword === "password";
+      const result = await adminLogin(submittedEmail, submittedPassword);
 
-      if (!isValidDemoLogin) {
-        setError("Invalid credentials.");
+      if (!result.success) {
+        setError(result.error || "Invalid credentials.");
         return;
       }
 
-      localStorage.setItem("admin_demo_auth", "true");
+      // Clear any old demo auth
+      localStorage.removeItem("admin_demo_auth");
 
       const redirectTarget = searchParams.get("redirect");
       const safeRedirect =
@@ -141,13 +141,6 @@ function AdminLoginForm() {
               Sign In
             </button>
           </form>
-        </div>
-
-        {/* Demo credentials (remove in production) */}
-        <div className="mt-6 p-4 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
-          <p className="text-xs text-yellow-400 font-mono">
-            Demo: admin@example.com / password
-          </p>
         </div>
       </div>
     </div>

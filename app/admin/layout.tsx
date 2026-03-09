@@ -6,6 +6,7 @@ import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { MobileHeader } from "@/components/admin-mobile/MobileHeader";
 import { MobileBottomNav } from "@/components/admin-mobile/MobileBottomNav";
 import { AdminUser } from "@/types/admin";
+import { getCurrentAdminUser, onAuthStateChange } from "@/lib/auth/admin";
 
 export default function AdminLayout({
   children,
@@ -22,24 +23,17 @@ export default function AdminLayout({
   const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
-    function checkAuth() {
+    async function checkAuth() {
       try {
-        const isDemoAuthed = localStorage.getItem("admin_demo_auth") === "true";
+        const adminUser = await getCurrentAdminUser();
 
-        if (!isDemoAuthed && !isLoginPage) {
+        if (!adminUser && !isLoginPage) {
           router.push(`/admin/login?redirect=${encodeURIComponent(pathname)}`);
           return;
         }
 
-        if (isDemoAuthed) {
-          setUser({
-            id: "demo-admin",
-            email: "admin@example.com",
-            full_name: "Admin",
-            role: "owner",
-            is_active: true,
-            created_at: new Date().toISOString(),
-          });
+        if (adminUser) {
+          setUser(adminUser);
         }
       } catch (err) {
         console.error("Auth error:", err);
@@ -53,6 +47,19 @@ export default function AdminLayout({
     }
 
     checkAuth();
+
+    // Listen for auth state changes
+    const subscription = onAuthStateChange((adminUser) => {
+      if (!adminUser && !isLoginPage) {
+        router.push("/admin/login");
+      } else {
+        setUser(adminUser);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [router, isLoginPage, pathname]);
 
   // For login page, render without auth layout
