@@ -1,10 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 
 export default function AuthCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0F0F0F] flex items-center justify-center px-4">
+          <p className="text-[#999999]">Completing sign in...</p>
+        </div>
+      }
+    >
+      <AuthCallbackContent />
+    </Suspense>
+  );
+}
+
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const hasHandledRef = useRef(false);
@@ -27,7 +41,9 @@ export default function AuthCallbackPage() {
         const queryType = searchParams.get("type");
         const code = searchParams.get("code");
 
-        const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+        const hashParams = new URLSearchParams(
+          window.location.hash.replace(/^#/, ""),
+        );
         const accessToken = hashParams.get("access_token");
         const refreshToken = hashParams.get("refresh_token");
         const hashType = hashParams.get("type");
@@ -57,9 +73,8 @@ export default function AuthCallbackPage() {
 
         if (code) {
           setStatus("Finalizing authentication...");
-          const { error: codeError } = await supabase.auth.exchangeCodeForSession(
-            code,
-          );
+          const { error: codeError } =
+            await supabase.auth.exchangeCodeForSession(code);
 
           if (codeError) {
             router.replace("/admin/login");
