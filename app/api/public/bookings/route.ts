@@ -157,11 +157,34 @@ export async function POST(request: Request) {
           </html>
         `;
 
+        const emailText = `
+Booking Confirmation
+
+Hi ${payload.customer_full_name},
+
+Your dumpster rental booking has been confirmed!
+
+Booking Details:
+- Booking Number: ${bookingNumber}
+- Dumpster Size: ${payload.size_yards} Yard
+- Delivery Date: ${payload.delivery_date}
+- Pickup Date: ${payload.pickup_date}
+- Delivery Address: ${fullAddress}
+- Total Price: $${payload.total.toFixed(2)}
+
+What's Next?
+Our team will contact you to confirm delivery details. You can reach us at (573) 356-4272.
+
+Thank you for choosing Dumpster Duff's!
+        `.trim();
+
         const response = await resend.emails.send({
-          from: fromEmail,
+          from: `"Dumpster Duff's" <${fromEmail}>`,
           to: payload.customer_email,
+          replyTo: "dustin@dumpsterduffs.com",
           subject: `Booking Confirmed: ${bookingNumber}`,
           html: emailHtml,
+          text: emailText,
         });
 
         if (response.error) {
