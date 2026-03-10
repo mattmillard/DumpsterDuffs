@@ -259,7 +259,7 @@ Dumpster Duff's
           text: customerEmailText,
           headers: {
             "X-Priority": "1",
-            "Importance": "high",
+            Importance: "high",
             "X-Entity-Type": "transactional_receipt",
           },
         });
@@ -314,10 +314,14 @@ Dumpster Duff's
                                     <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Phone:</td>
                                     <td style="color: #60a5fa; font-size: 14px; text-align: right; padding: 8px 0;"><a href="tel:${payload.customer_phone}" style="color: #60a5fa; text-decoration: none;">${payload.customer_phone}</a></td>
                                   </tr>
-                                  ${payload.customer_company ? `<tr>
+                                  ${
+                                    payload.customer_company
+                                      ? `<tr>
                                     <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Company:</td>
                                     <td style="color: #f1f5f9; font-size: 14px; text-align: right; padding: 8px 0;">${payload.customer_company}</td>
-                                  </tr>` : ''}
+                                  </tr>`
+                                      : ""
+                                  }
                                 </table>
                               </td>
                             </tr>
@@ -356,12 +360,16 @@ Dumpster Duff's
                               <td style="padding: 25px;">
                                 <h2 style="color: #93c5fd; font-size: 18px; margin: 0 0 10px; font-weight: 600;">Delivery Address</h2>
                                 <p style="color: #f1f5f9; font-size: 15px; margin: 0; line-height: 1.6;">${fullAddress}</p>
-                                ${payload.placement_notes ? `
+                                ${
+                                  payload.placement_notes
+                                    ? `
                                   <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #475569;">
                                     <p style="color: #94a3b8; font-size: 13px; margin: 0 0 5px; font-weight: 600;">Placement Notes:</p>
                                     <p style="color: #f1f5f9; font-size: 13px; margin: 0; font-style: italic;">"${payload.placement_notes}"</p>
                                   </div>
-                                ` : ''}
+                                `
+                                    : ""
+                                }
                               </td>
                             </tr>
                           </table>
@@ -435,7 +443,7 @@ CUSTOMER DETAILS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Name:     ${payload.customer_full_name}
 Email:    ${payload.customer_email}
-Phone:    ${payload.customer_phone}${payload.customer_company ? `\nCompany:  ${payload.customer_company}` : ''}
+Phone:    ${payload.customer_phone}${payload.customer_company ? `\nCompany:  ${payload.customer_company}` : ""}
 
 BOOKING INFORMATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -446,7 +454,7 @@ Duration:      ${payload.rental_duration_days} days
 
 DELIVERY ADDRESS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${fullAddress}${payload.placement_notes ? `\n\nPlacement Notes:\n"${payload.placement_notes}"` : ''}
+${fullAddress}${payload.placement_notes ? `\n\nPlacement Notes:\n"${payload.placement_notes}"` : ""}
 
 PRICING
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -472,7 +480,7 @@ Dumpster Duff's Admin System
           text: adminEmailText,
           headers: {
             "X-Priority": "1",
-            "Importance": "high",
+            Importance: "high",
             "X-Entity-Type": "transactional",
           },
         });

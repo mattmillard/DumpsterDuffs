@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ReactNode } from "react";
 
 interface BookingProgressBarProps {
@@ -88,6 +89,15 @@ export function BookingContainer({
 
         {/* Main content */}
         <div className="card p-8 md:p-10">{children}</div>
+
+        <div className="mt-6 text-center">
+          <Link
+            href="/"
+            className="text-sm text-[#999999] hover:text-white transition-colors"
+          >
+            ← Back to Home
+          </Link>
+        </div>
       </div>
     </div>
   );

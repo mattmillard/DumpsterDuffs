@@ -61,9 +61,9 @@ export default function TermsPage() {
               credit cards and other payment methods as listed on our website.
             </p>
             <p className="text-gray-700 mb-4">
-              <strong>3.3 Pricing:</strong> Prices are subject to change.
-              Quoted prices are valid for the specified service period and may
-              vary based on location, dumpster size, and rental duration.
+              <strong>3.3 Pricing:</strong> Prices are subject to change. Quoted
+              prices are valid for the specified service period and may vary
+              based on location, dumpster size, and rental duration.
             </p>
           </section>
 
@@ -89,9 +89,7 @@ export default function TermsPage() {
             </h2>
             <p className="text-gray-700 mb-4">As a customer, you agree to:</p>
             <ul className="list-disc pl-6 text-gray-700 mb-4 space-y-2">
-              <li>
-                Provide accurate delivery location and access information
-              </li>
+              <li>Provide accurate delivery location and access information</li>
               <li>
                 Ensure the placement area is clear and accessible for our
                 vehicles
@@ -100,9 +98,7 @@ export default function TermsPage() {
                 Only dispose of permitted materials (no hazardous waste,
                 chemicals, paint, tires, batteries, or appliances with freon)
               </li>
-              <li>
-                Not exceed the weight limit or fill line of the dumpster
-              </li>
+              <li>Not exceed the weight limit or fill line of the dumpster</li>
               <li>
                 Obtain any necessary permits for street placement of dumpsters
               </li>

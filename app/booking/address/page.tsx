@@ -173,7 +173,8 @@ export default function BookingAddressPage() {
         {/* Use My Location Button */}
         <div className="mb-8">
           <p className="text-sm text-white/70 mb-3 text-center lg:text-left">
-            📍 Click to automatically fill in your address using your current location
+            📍 Click to automatically fill in your address using your current
+            location
           </p>
           <button
             type="button"

@@ -70,9 +70,7 @@ export default function PrivacyPage() {
                 payment processors, email services)
               </li>
               <li>Law enforcement when required by law</li>
-              <li>
-                Business partners only with your explicit consent
-              </li>
+              <li>Business partners only with your explicit consent</li>
             </ul>
           </section>
 
