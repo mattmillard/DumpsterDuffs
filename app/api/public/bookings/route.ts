@@ -272,132 +272,133 @@ Dumpster Duff's
           emailSent = true;
         }
 
-        // Send admin notification email
+        // Send admin notification email with dark mode design
         const adminEmailHtml = `
           <!DOCTYPE html>
           <html lang="en">
             <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>New Booking Alert</title>
+              <title>New Booking Notification</title>
             </head>
-            <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #0f172a; color: #e2e8f0;">
+            <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #e2e8f0; background-color: #0f172a;">
               <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0f172a; padding: 20px 0;">
                 <tr>
                   <td align="center">
-                    <table width="650" cellpadding="0" cellspacing="0" style="background-color: #1e293b; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #334155;">
-                      <!-- Alert Header -->
+                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #1e293b; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+                      <!-- Header -->
                       <tr>
-                        <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 25px 30px; border-radius: 12px 12px 0 0;">
-                          <table width="100%" cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td>
-                                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">
-                                  🎉 New Booking Alert
-                                </h1>
-                                <p style="color: #d1fae5; margin: 5px 0 0; font-size: 14px;">Booking #${bookingNumber}</p>
-                              </td>
-                              <td align="right">
-                                <div style="background-color: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; display: inline-block;">
-                                  <span style="color: #ffffff; font-size: 20px; font-weight: 700;">$${payload.total.toFixed(2)}</span>
-                                </div>
-                              </td>
-                            </tr>
-                          </table>
+                        <td style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                          <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">New Booking Received</h1>
+                          <p style="color: #dbeafe; margin: 8px 0 0; font-size: 14px;">Booking #${bookingNumber} - $${payload.total.toFixed(2)}</p>
                         </td>
                       </tr>
                       
-                      <!-- Main Content -->
+                      <!-- Content -->
                       <tr>
-                        <td style="padding: 30px;">
+                        <td style="padding: 40px 30px;">
                           <!-- Customer Information -->
-                          <div style="background-color: #334155; border-radius: 8px; padding: 20px; margin-bottom: 20px; border-left: 4px solid #3b82f6;">
-                            <h2 style="color: #93c5fd; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 15px; font-weight: 600;">Customer Details</h2>
-                            <table width="100%" cellpadding="6" cellspacing="0">
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px; width: 35%;">Name:</td>
-                                <td style="color: #f1f5f9; font-size: 15px; font-weight: 600;">${payload.customer_full_name}</td>
-                              </tr>
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px;">Email:</td>
-                                <td style="color: #3b82f6; font-size: 14px;"><a href="mailto:${payload.customer_email}" style="color: #3b82f6; text-decoration: none;">${payload.customer_email}</a></td>
-                              </tr>
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px;">Phone:</td>
-                                <td style="color: #3b82f6; font-size: 14px;"><a href="tel:${payload.customer_phone}" style="color: #3b82f6; text-decoration: none;">${payload.customer_phone}</a></td>
-                              </tr>
-                              ${payload.customer_company ? `<tr>
-                                <td style="color: #94a3b8; font-size: 13px;">Company:</td>
-                                <td style="color: #f1f5f9; font-size: 14px;">${payload.customer_company}</td>
-                              </tr>` : ''}
-                            </table>
-                          </div>
+                          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 25px;">
+                            <tr>
+                              <td style="padding: 25px;">
+                                <h2 style="color: #93c5fd; font-size: 18px; margin: 0 0 20px; font-weight: 600;">Customer Information</h2>
+                                <table width="100%" cellpadding="8" cellspacing="0">
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0; width: 35%;">Name:</td>
+                                    <td style="color: #f1f5f9; font-size: 14px; font-weight: 600; text-align: right; padding: 8px 0;">${payload.customer_full_name}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Email:</td>
+                                    <td style="color: #60a5fa; font-size: 14px; text-align: right; padding: 8px 0;"><a href="mailto:${payload.customer_email}" style="color: #60a5fa; text-decoration: none;">${payload.customer_email}</a></td>
+                                  </tr>
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Phone:</td>
+                                    <td style="color: #60a5fa; font-size: 14px; text-align: right; padding: 8px 0;"><a href="tel:${payload.customer_phone}" style="color: #60a5fa; text-decoration: none;">${payload.customer_phone}</a></td>
+                                  </tr>
+                                  ${payload.customer_company ? `<tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Company:</td>
+                                    <td style="color: #f1f5f9; font-size: 14px; text-align: right; padding: 8px 0;">${payload.customer_company}</td>
+                                  </tr>` : ''}
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
                           
                           <!-- Booking Details -->
-                          <div style="background-color: #334155; border-radius: 8px; padding: 20px; margin-bottom: 20px; border-left: 4px solid #8b5cf6;">
-                            <h2 style="color: #c4b5fd; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 15px; font-weight: 600;">Booking Information</h2>
-                            <table width="100%" cellpadding="6" cellspacing="0">
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px; width: 35%;">Size:</td>
-                                <td style="color: #f1f5f9; font-size: 15px; font-weight: 600;">${payload.size_yards} Yard Dumpster</td>
-                              </tr>
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px;">Delivery Date:</td>
-                                <td style="color: #f1f5f9; font-size: 14px; font-weight: 600;">${payload.delivery_date}</td>
-                              </tr>
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px;">Pickup Date:</td>
-                                <td style="color: #f1f5f9; font-size: 14px; font-weight: 600;">${payload.pickup_date}</td>
-                              </tr>
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px;">Duration:</td>
-                                <td style="color: #f1f5f9; font-size: 14px;">${payload.rental_duration_days} days</td>
-                              </tr>
-                            </table>
-                          </div>
+                          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 25px;">
+                            <tr>
+                              <td style="padding: 25px;">
+                                <h2 style="color: #93c5fd; font-size: 18px; margin: 0 0 20px; font-weight: 600;">Booking Details</h2>
+                                <table width="100%" cellpadding="8" cellspacing="0">
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0; width: 35%;">Size:</td>
+                                    <td style="color: #f1f5f9; font-size: 14px; font-weight: 600; text-align: right; padding: 8px 0;">${payload.size_yards} Yard Dumpster</td>
+                                  </tr>
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Delivery Date:</td>
+                                    <td style="color: #f1f5f9; font-size: 14px; font-weight: 600; text-align: right; padding: 8px 0;">${payload.delivery_date}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Pickup Date:</td>
+                                    <td style="color: #f1f5f9; font-size: 14px; font-weight: 600; text-align: right; padding: 8px 0;">${payload.pickup_date}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Duration:</td>
+                                    <td style="color: #f1f5f9; font-size: 14px; text-align: right; padding: 8px 0;">${payload.rental_duration_days} days</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
                           
                           <!-- Delivery Address -->
-                          <div style="background-color: #334155; border-radius: 8px; padding: 20px; margin-bottom: 20px; border-left: 4px solid #f59e0b;">
-                            <h2 style="color: #fcd34d; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 15px; font-weight: 600;">Delivery Address</h2>
-                            <p style="color: #f1f5f9; font-size: 15px; margin: 0; line-height: 1.6;">${fullAddress}</p>
-                            ${payload.placement_notes ? `
-                              <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #475569;">
-                                <p style="color: #94a3b8; font-size: 12px; margin: 0 0 5px;">Placement Notes:</p>
-                                <p style="color: #f1f5f9; font-size: 13px; margin: 0; font-style: italic;">"${payload.placement_notes}"</p>
-                              </div>
-                            ` : ''}
-                          </div>
+                          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 25px;">
+                            <tr>
+                              <td style="padding: 25px;">
+                                <h2 style="color: #93c5fd; font-size: 18px; margin: 0 0 10px; font-weight: 600;">Delivery Address</h2>
+                                <p style="color: #f1f5f9; font-size: 15px; margin: 0; line-height: 1.6;">${fullAddress}</p>
+                                ${payload.placement_notes ? `
+                                  <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #475569;">
+                                    <p style="color: #94a3b8; font-size: 13px; margin: 0 0 5px; font-weight: 600;">Placement Notes:</p>
+                                    <p style="color: #f1f5f9; font-size: 13px; margin: 0; font-style: italic;">"${payload.placement_notes}"</p>
+                                  </div>
+                                ` : ''}
+                              </td>
+                            </tr>
+                          </table>
                           
-                          <!-- Pricing Breakdown -->
-                          <div style="background-color: #334155; border-radius: 8px; padding: 20px; margin-bottom: 25px; border-left: 4px solid #10b981;">
-                            <h2 style="color: #6ee7b7; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 15px; font-weight: 600;">Pricing</h2>
-                            <table width="100%" cellpadding="6" cellspacing="0">
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px;">Subtotal:</td>
-                                <td style="color: #f1f5f9; font-size: 14px; text-align: right;">$${payload.subtotal.toFixed(2)}</td>
-                              </tr>
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px;">Delivery Fee:</td>
-                                <td style="color: #f1f5f9; font-size: 14px; text-align: right;">$${payload.delivery_fee.toFixed(2)}</td>
-                              </tr>
-                              <tr>
-                                <td style="color: #94a3b8; font-size: 13px;">Tax:</td>
-                                <td style="color: #f1f5f9; font-size: 14px; text-align: right;">$${payload.tax.toFixed(2)}</td>
-                              </tr>
-                              <tr style="border-top: 2px solid #475569;">
-                                <td style="color: #10b981; font-size: 16px; font-weight: 700; padding-top: 12px;">Total:</td>
-                                <td style="color: #10b981; font-size: 18px; font-weight: 700; text-align: right; padding-top: 12px;">$${payload.total.toFixed(2)}</td>
-                              </tr>
-                            </table>
-                          </div>
+                          <!-- Pricing -->
+                          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 30px;">
+                            <tr>
+                              <td style="padding: 25px;">
+                                <h2 style="color: #93c5fd; font-size: 18px; margin: 0 0 20px; font-weight: 600;">Pricing</h2>
+                                <table width="100%" cellpadding="8" cellspacing="0">
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Subtotal:</td>
+                                    <td style="color: #f1f5f9; font-size: 14px; text-align: right; padding: 8px 0;">$${payload.subtotal.toFixed(2)}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Delivery Fee:</td>
+                                    <td style="color: #f1f5f9; font-size: 14px; text-align: right; padding: 8px 0;">$${payload.delivery_fee.toFixed(2)}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style="color: #94a3b8; font-size: 14px; padding: 8px 0;">Tax:</td>
+                                    <td style="color: #f1f5f9; font-size: 14px; text-align: right; padding: 8px 0;">$${payload.tax.toFixed(2)}</td>
+                                  </tr>
+                                  <tr style="border-top: 2px solid #475569;">
+                                    <td style="color: #f1f5f9; font-size: 16px; font-weight: 700; padding-top: 15px;">Total:</td>
+                                    <td style="color: #60a5fa; font-size: 18px; font-weight: 700; text-align: right; padding-top: 15px;">$${payload.total.toFixed(2)}</td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
                           
                           <!-- Action Button -->
                           <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                               <td align="center" style="padding: 10px 0;">
-                                <a href="https://dumpsterduffs.com/admin/bookings?id=${bookingId}" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.4);">
-                                  📊 View in Admin Panel
-                                </a>
+                                <a href="https://dumpsterduffs.com/admin/bookings?id=${bookingId}" style="display: inline-block; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.4);">View in Admin Panel</a>
                               </td>
                             </tr>
                           </table>
@@ -406,8 +407,9 @@ Dumpster Duff's
                       
                       <!-- Footer -->
                       <tr>
-                        <td style="background-color: #0f172a; padding: 20px; text-align: center; border-radius: 0 0 12px 12px; border-top: 1px solid #334155;">
-                          <p style="color: #64748b; font-size: 12px; margin: 0;">Dumpster Duff's Admin System</p>
+                        <td style="background-color: #0f172a; padding: 30px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #475569;">
+                          <p style="color: #64748b; font-size: 12px; margin: 0;">Dumpster Duff's Booking System</p>
+                          <p style="color: #64748b; font-size: 12px; margin: 5px 0 0;">(573) 356-4272 | dustin@dumpsterduffs.com</p>
                         </td>
                       </tr>
                     </table>
@@ -458,10 +460,10 @@ Dumpster Duff's Admin System
         `.trim();
 
         const adminResponse = await resend.emails.send({
-          from: `"Dumpster Duff's Bookings" <${fromEmail}>`,
-          to: "wantsomekarn@gmail.com",
-          replyTo: payload.customer_email,
-          subject: `🎉 New Booking: ${bookingNumber} - $${payload.total.toFixed(2)}`,
+          from: `"Dumpster Duff's" <${fromEmail}>`,
+          to: "matt.millard@icloud.com",
+          replyTo: "dustin@dumpsterduffs.com",
+          subject: `New Booking Notification: ${bookingNumber}`,
           html: adminEmailHtml,
           text: adminEmailText,
           headers: {
