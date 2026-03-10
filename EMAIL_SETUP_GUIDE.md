@@ -1,6 +1,7 @@
 # Email Setup Guide: GoDaddy Forwarding + Resend Transactional Emails
 
 ## Overview
+
 This guide helps you maintain your existing GoDaddy email forwarding (`dustin@dumpsterduffs.com`) while adding automated booking confirmation emails using Resend.
 
 **Key Principle:** Transactional emails (booking confirmations) use a separate service (Resend) to avoid interfering with your operational email.
@@ -36,6 +37,7 @@ This guide helps you maintain your existing GoDaddy email forwarding (`dustin@du
 ### Important: Your Current GoDaddy Setup (DO NOT CHANGE)
 
 Your existing email forwarding uses these records (leave them alone):
+
 - **MX Records** pointing to GoDaddy's mail servers
 - These handle `dustin@dumpsterduffs.com` forwarding
 
@@ -48,6 +50,7 @@ Go to GoDaddy → My Products → DNS → Manage DNS for `dumpsterduffs.com`
 **Critical:** You need BOTH GoDaddy (for email forwarding) AND Resend (for booking confirmations) in one SPF record.
 
 **Find and REPLACE your existing SPF record with:**
+
 ```
 Type: TXT
 Name: @ (or leave blank)
@@ -56,6 +59,7 @@ TTL: 3600
 ```
 
 **Explanation:**
+
 - `v=spf1` - SPF version
 - `include:secureserver.net` - Authorizes GoDaddy email forwarding
 - `include:eu.sparkpostmail.com` - Authorizes Resend transactional emails
@@ -114,6 +118,7 @@ This sends reports to your forwarding address if someone spoofs your domain.
 2. Add two variables:
 
 **Variable 1:**
+
 ```
 Name: RESEND_API_KEY
 Value: re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (your actual key)
@@ -121,6 +126,7 @@ Environment: Production, Preview, Development
 ```
 
 **Variable 2:**
+
 ```
 Name: BOOKING_FROM_EMAIL
 Value: bookings@dumpsterduffs.com
@@ -159,11 +165,13 @@ After adding environment variables to Vercel:
 ## Step 9: Test Email Sending
 
 ### Test 1: Send Test Email in Resend Dashboard
+
 1. Go to Resend → Logs → Send Test Email
 2. Send to your personal email
 3. Confirm it arrives and isn't in spam
 
 ### Test 2: Make a Real Test Booking
+
 1. Go to `https://dumpsterduffs.com/booking`
 2. Complete a booking with YOUR email address
 3. Check for confirmation email
@@ -172,6 +180,7 @@ After adding environment variables to Vercel:
 ### Debug if Emails Don't Send
 
 Check Vercel logs:
+
 1. Vercel Dashboard → Deployments → Latest → Logs
 2. Search for "Email" or "Resend"
 3. Look for errors or "Email sent successfully"
@@ -183,9 +192,10 @@ Check Vercel logs:
 Here's exactly what you should have in GoDaddy DNS:
 
 ### Existing (Already There - Don't Touch)
+
 ```
 Type: MX
-Name: @ 
+Name: @
 Value: mailstore1.secureserver.net (priority 10)
 
 Type: MX
@@ -194,6 +204,7 @@ Value: smtp.secureserver.net (priority 0)
 ```
 
 ### New Records to Add
+
 ```
 Type: TXT
 Name: @
@@ -234,14 +245,17 @@ See the code: [app/api/public/bookings/route.ts](app/api/public/bookings/route.t
 ## Troubleshooting
 
 ### Email Goes to Spam
+
 - **Cause:** Domain not fully verified, missing DKIM/SPF
 - **Fix:** Wait for DNS propagation, verify all records in Resend dashboard
 
 ### "Email skipped - missing config" in Logs
+
 - **Cause:** Environment variables not set in Vercel
 - **Fix:** Double-check Step 6, then redeploy
 
 ### GoDaddy Email Forwarding Stops Working
+
 - **Cause:** Accidentally changed MX records
 - **Fix:** Restore MX records:
   ```
@@ -250,6 +264,7 @@ See the code: [app/api/public/bookings/route.ts](app/api/public/bookings/route.t
   ```
 
 ### Multiple SPF Records Error
+
 - **Cause:** Added second SPF TXT record instead of merging
 - **Fix:** Delete duplicate, keep only ONE with all includes:
   ```
@@ -260,10 +275,10 @@ See the code: [app/api/public/bookings/route.ts](app/api/public/bookings/route.t
 
 ## Email Addresses Breakdown
 
-| Address | Purpose | Service | Receives | Sends |
-|---------|---------|---------|----------|-------|
-| `dustin@dumpsterduffs.com` | Your operational email | GoDaddy Forwarding | ✅ | ❌ |
-| `bookings@dumpsterduffs.com` | Automated confirmations | Resend | ❌ | ✅ |
+| Address                      | Purpose                 | Service            | Receives | Sends |
+| ---------------------------- | ----------------------- | ------------------ | -------- | ----- |
+| `dustin@dumpsterduffs.com`   | Your operational email  | GoDaddy Forwarding | ✅       | ❌    |
+| `bookings@dumpsterduffs.com` | Automated confirmations | Resend             | ❌       | ✅    |
 
 **Note:** You can reply to customer emails from your personal inbox. They won't see the `@dumpsterduffs` address unless you set up a full mailbox (not just forwarding).
 
@@ -277,7 +292,7 @@ If you want customers to reply to your operational email, edit [app/api/public/b
 const response = await resend.emails.send({
   from: fromEmail, // bookings@dumpsterduffs.com
   to: payload.customer_email,
-  replyTo: 'dustin@dumpsterduffs.com', // Add this line
+  replyTo: "dustin@dumpsterduffs.com", // Add this line
   subject: `Booking Confirmed: ${bookingNumber}`,
   html: emailHtml,
 });
@@ -312,6 +327,7 @@ This way, when customers hit reply, it goes to your GoDaddy forwarding address.
 ## Questions?
 
 If something breaks or you need help:
+
 1. Check Resend Dashboard → Logs for errors
 2. Check Vercel → Logs for "Email" or "Resend"
 3. Verify DNS records are correct in GoDaddy
