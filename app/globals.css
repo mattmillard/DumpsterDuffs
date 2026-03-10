@@ -153,6 +153,24 @@
     }
   }
 
+  /* Subtle pulse animation for location button */
+  .animate-subtle-pulse {
+    animation: subtlePulse 3s ease-in-out infinite;
+  }
+
+  @keyframes subtlePulse {
+    0%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.3);
+    }
+
+    50% {
+      transform: scale(1.02);
+      box-shadow: 0 0 0 6px rgba(255, 140, 0, 0);
+    }
+  }
+
   /* Safe area support for notch/Dynamic Island */
   .safe-top {
     padding-top: env(safe-area-inset-top);

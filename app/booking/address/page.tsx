@@ -171,12 +171,15 @@ export default function BookingAddressPage() {
 
       <div className="max-w-2xl">
         {/* Use My Location Button */}
-        <div className="mb-6">
+        <div className="mb-8">
+          <p className="text-sm text-white/70 mb-3 text-center lg:text-left">
+            📍 Click to automatically fill in your address using your current location
+          </p>
           <button
             type="button"
             onClick={handleUseMyLocation}
             disabled={isLocating}
-            className="btn-secondary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full lg:w-auto btn-secondary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-base lg:text-sm py-4 lg:py-2 px-6 font-semibold transition-all duration-300 hover:scale-105 disabled:hover:scale-100 animate-subtle-pulse disabled:animate-none"
           >
             <svg
               className={`w-5 h-5 ${isLocating ? "animate-spin" : ""}`}
@@ -202,10 +205,6 @@ export default function BookingAddressPage() {
             </svg>
             {isLocating ? "Getting location..." : "Use My Location"}
           </button>
-          <p className="text-sm text-white/60 mt-2">
-            Click to automatically fill in your address using your current
-            location
-          </p>
         </div>
 
         <div className="space-y-6">
