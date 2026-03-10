@@ -278,13 +278,15 @@ Dumpster Duff's
             <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <meta name="color-scheme" content="dark only">
+              <meta name="supported-color-schemes" content="dark">
               <title>New Booking Notification</title>
             </head>
-            <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #e2e8f0; background-color: #0f172a;">
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0f172a; padding: 20px 0;">
+            <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #e2e8f0; background-color: #0f172a !important;">
+              <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#0f172a" style="background-color: #0f172a; padding: 20px 0;">
                 <tr>
-                  <td align="center">
-                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #1e293b; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+                  <td align="center" bgcolor="#0f172a" style="background-color: #0f172a;">
+                    <table width="600" cellpadding="0" cellspacing="0" bgcolor="#1e293b" style="background-color: #1e293b; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
                       <!-- Header -->
                       <tr>
                         <td style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
@@ -297,7 +299,7 @@ Dumpster Duff's
                       <tr>
                         <td style="padding: 40px 30px;">
                           <!-- Customer Information -->
-                          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 25px;">
+                          <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#334155" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 25px;">
                             <tr>
                               <td style="padding: 25px;">
                                 <h2 style="color: #93c5fd; font-size: 18px; margin: 0 0 20px; font-weight: 600;">Customer Information</h2>
@@ -328,7 +330,7 @@ Dumpster Duff's
                           </table>
                           
                           <!-- Booking Details -->
-                          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 25px;">
+                          <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#334155" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 25px;">
                             <tr>
                               <td style="padding: 25px;">
                                 <h2 style="color: #93c5fd; font-size: 18px; margin: 0 0 20px; font-weight: 600;">Booking Details</h2>
@@ -355,7 +357,7 @@ Dumpster Duff's
                           </table>
                           
                           <!-- Delivery Address -->
-                          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 25px;">
+                          <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#334155" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 25px;">
                             <tr>
                               <td style="padding: 25px;">
                                 <h2 style="color: #93c5fd; font-size: 18px; margin: 0 0 10px; font-weight: 600;">Delivery Address</h2>
@@ -375,7 +377,7 @@ Dumpster Duff's
                           </table>
                           
                           <!-- Pricing -->
-                          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 30px;">
+                          <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#334155" style="background-color: #334155; border-radius: 6px; border: 1px solid #475569; margin-bottom: 30px;">
                             <tr>
                               <td style="padding: 25px;">
                                 <h2 style="color: #93c5fd; font-size: 18px; margin: 0 0 20px; font-weight: 600;">Pricing</h2>
@@ -419,7 +421,7 @@ Dumpster Duff's
                       
                       <!-- Footer -->
                       <tr>
-                        <td style="background-color: #0f172a; padding: 30px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #475569;">
+                        <td bgcolor="#0f172a" style="background-color: #0f172a; padding: 30px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #475569;">
                           <p style="color: #64748b; font-size: 12px; margin: 0 0 5px;">Dumpster Duff's</p>
                           <p style="color: #64748b; font-size: 12px; margin: 0;">(573) 356-4272 | dustin@dumpsterduffs.com</p>
                         </td>
