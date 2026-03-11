@@ -143,7 +143,7 @@ export default async function SizesPricing() {
                 },
                 {
                   q: "Do you offer pickup/loading service?",
-                  a: "Yes! We offer professional loading service for $149. Our team will load your dumpster for you.",
+                  a: "Yes! We offer professional loading service starting at $149. Final pricing depends on the amount and type of work involved.",
                 },
               ].map((faq, idx) => (
                 <details
