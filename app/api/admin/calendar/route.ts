@@ -10,6 +10,7 @@ import {
   getCalendarSnapshot,
   restoreBooking,
   toggleBlacklistEntry,
+  updateInternalReservation,
 } from "@/lib/admin/bookingOperations";
 
 type CalendarActionPayload =
@@ -52,6 +53,15 @@ type CalendarActionPayload =
       pickup_date: string;
       pickup_time_slot?: "AM" | "PM";
       notes?: string;
+    }
+  | {
+      action: "update_reservation";
+      id: string;
+      size_yards?: number;
+      start_date?: string;
+      pickup_date?: string;
+      pickup_time_slot?: "AM" | "PM" | null;
+      notes?: string | null;
     }
   | {
       action: "reservation_pickup_outcome";
@@ -217,6 +227,25 @@ export async function POST(request: Request) {
 
         await createInternalReservation({
           size_yards: Number(payload.size_yards),
+          start_date: payload.start_date,
+          pickup_date: payload.pickup_date,
+          pickup_time_slot: payload.pickup_time_slot,
+          notes: payload.notes,
+        });
+        break;
+      }
+
+      case "update_reservation": {
+        if (!payload.id) {
+          return NextResponse.json(
+            { error: "id is required" },
+            { status: 400 },
+          );
+        }
+
+        await updateInternalReservation({
+          id: payload.id,
+          size_yards: payload.size_yards,
           start_date: payload.start_date,
           pickup_date: payload.pickup_date,
           pickup_time_slot: payload.pickup_time_slot,

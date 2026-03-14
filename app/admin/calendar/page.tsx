@@ -89,6 +89,7 @@ export default function AdminCalendarPage() {
     "calendar" | "bookings" | "reservations" | "blacklist"
   >("calendar");
   const [showReservationModal, setShowReservationModal] = useState(false);
+  const [editingReservationId, setEditingReservationId] = useState<string | null>(null);
   const [reservationSize, setReservationSize] = useState(15);
   const [reservationStartDate, setReservationStartDate] = useState("");
   const [reservationPickupDate, setReservationPickupDate] = useState("");
@@ -284,19 +285,31 @@ export default function AdminCalendarPage() {
     await loadCalendar(currentMonth);
   };
 
-  const openReservationModal = () => {
-    const today = new Date().toISOString().split("T")[0];
-    const defaultStart = selectedDate || today;
-    const defaultPickup = selectedDate || today;
-    const selectedSize = snapshot?.days
-      .flatMap((day) => day.sizes)
-      .find((size) => size.isBookable)?.size_yards;
+  const openReservationModal = (reservation?: InternalReservation) => {
+    if (reservation) {
+      // Editing existing reservation
+      setEditingReservationId(reservation.id);
+      setReservationSize(reservation.size_yards);
+      setReservationStartDate(reservation.start_date);
+      setReservationPickupDate(reservation.pickup_date);
+      setReservationPickupTimeSlot(reservation.pickup_time_slot || "AM");
+      setReservationNotes(reservation.notes || "");
+    } else {
+      // Creating new reservation
+      const today = new Date().toISOString().split("T")[0];
+      const defaultStart = selectedDate || today;
+      const defaultPickup = selectedDate || today;
+      const selectedSize = snapshot?.days
+        .flatMap((day) => day.sizes)
+        .find((size) => size.isBookable)?.size_yards;
 
-    setReservationSize(selectedSize || 15);
-    setReservationStartDate(defaultStart);
-    setReservationPickupDate(defaultPickup);
-    setReservationPickupTimeSlot("AM");
-    setReservationNotes("");
+      setEditingReservationId(null);
+      setReservationSize(selectedSize || 15);
+      setReservationStartDate(defaultStart);
+      setReservationPickupDate(defaultPickup);
+      setReservationPickupTimeSlot("AM");
+      setReservationNotes("");
+    }
     setReservationError(null);
     setShowReservationModal(true);
   };
@@ -304,6 +317,7 @@ export default function AdminCalendarPage() {
   const closeReservationModal = () => {
     if (reservationSubmitting) return;
     setShowReservationModal(false);
+    setEditingReservationId(null);
   };
 
   const reserveDumpster = async () => {
@@ -321,17 +335,30 @@ export default function AdminCalendarPage() {
     setReservationError(null);
 
     try {
+      const isEditing = !!editingReservationId;
       const response = await fetch("/api/admin/calendar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "reserve_dumpster",
-          size_yards: reservationSize,
-          start_date: reservationStartDate,
-          pickup_date: reservationPickupDate,
-          pickup_time_slot: reservationPickupTimeSlot,
-          notes: reservationNotes.trim() || undefined,
-        }),
+        body: JSON.stringify(
+          isEditing
+            ? {
+                action: "update_reservation",
+                id: editingReservationId,
+                size_yards: reservationSize,
+                start_date: reservationStartDate,
+                pickup_date: reservationPickupDate,
+                pickup_time_slot: reservationPickupTimeSlot,
+                notes: reservationNotes.trim() || null,
+              }
+            : {
+                action: "reserve_dumpster",
+                size_yards: reservationSize,
+                start_date: reservationStartDate,
+                pickup_date: reservationPickupDate,
+                pickup_time_slot: reservationPickupTimeSlot,
+                notes: reservationNotes.trim() || undefined,
+              }
+        ),
       });
 
       const payload = await response.json().catch(() => ({}));
@@ -346,6 +373,7 @@ export default function AdminCalendarPage() {
       }
 
       setShowReservationModal(false);
+      setEditingReservationId(null);
       await loadCalendar(currentMonth);
     } finally {
       setReservationSubmitting(false);
@@ -485,7 +513,7 @@ export default function AdminCalendarPage() {
           <AdminButton variant="secondary" onClick={addToBlacklist}>
             + Blacklist Entry
           </AdminButton>
-          <AdminButton variant="primary" onClick={openReservationModal}>
+          <AdminButton variant="primary" onClick={() => openReservationModal()}>
             + Reserve Dumpster
           </AdminButton>
         </div>
@@ -964,7 +992,13 @@ export default function AdminCalendarPage() {
                     #{reservation.id.slice(0, 8)}
                   </p>
                   {reservation.status === "active" && (
-                    <div className="flex gap-2 justify-end">
+                    <div className="flex gap-2 justify-end flex-wrap">
+                      <button
+                        onClick={() => openReservationModal(reservation)}
+                        className="text-xs text-blue-400 hover:underline"
+                      >
+                        Edit
+                      </button>
                       <button
                         onClick={() =>
                           submitReservationOutcome(reservation, "picked_up")
@@ -1046,11 +1080,12 @@ export default function AdminCalendarPage() {
             <div className="w-full max-w-lg bg-[#1A1A1A] border border-[#404040] rounded-lg shadow-2xl">
               <div className="px-6 py-4 border-b border-[#404040]">
                 <h3 className="text-xl font-bold text-white">
-                  Reserve Dumpster
+                  {editingReservationId ? "Edit Reservation" : "Reserve Dumpster"}
                 </h3>
                 <p className="text-sm text-[#999999] mt-1">
-                  Block one dumpster until pickup. Availability restores after
-                  pickup confirmation.
+                  {editingReservationId
+                    ? "Update reservation details."
+                    : "Block one dumpster until pickup. Availability restores after pickup confirmation."}
                 </p>
               </div>
 
