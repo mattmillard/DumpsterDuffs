@@ -42,6 +42,19 @@ export type BlacklistEntry = {
 	created_at: string;
 };
 
+export type InternalReservation = {
+	id: string;
+	size_yards: number;
+	start_date: string;
+	pickup_date: string;
+	status: "active" | "picked_up" | "pickup_missed";
+	notes: string | null;
+	pickup_notes: string | null;
+	pickup_confirmed_at: string | null;
+	created_at: string;
+	updated_at: string;
+};
+
 export type DayAvailability = {
 	date: string;
 	deliveries: number;
@@ -68,6 +81,7 @@ export type CalendarSnapshot = {
 	blockedDates: BlockedDate[];
 	blacklist: BlacklistEntry[];
 	bookings: CalendarBookingEvent[];
+	internalReservations: InternalReservation[];
 	days: DayAvailability[];
 };
 
@@ -165,6 +179,10 @@ function bookingOccupiesDate(booking: BookingRecord, date: string): boolean {
 	return booking.delivery_date <= date && booking.return_date >= date;
 }
 
+function reservationOccupiesDate(reservation: InternalReservation, date: string): boolean {
+	return reservation.start_date <= date && reservation.pickup_date >= date;
+}
+
 async function fetchBookingsForRange(start: string, end: string) {
 	const { data, error } = await supabaseAdmin
 		.from("bookings")
@@ -211,18 +229,38 @@ async function fetchBlacklistEntries() {
 	return (data || []) as BlacklistEntry[];
 }
 
+async function fetchInternalReservationsForRange(start: string, end: string) {
+	const { data, error } = await supabaseAdmin
+		.from("booking_internal_reservations")
+		.select(
+			"id, size_yards, start_date, pickup_date, status, notes, pickup_notes, pickup_confirmed_at, created_at, updated_at",
+		)
+		.lte("start_date", end)
+		.gte("pickup_date", start)
+		.order("pickup_date", { ascending: true });
+
+	if (error) {
+		if (isMissingTableError(error)) return [] as InternalReservation[];
+		throw error;
+	}
+
+	return (data || []) as InternalReservation[];
+}
+
 export async function getCalendarSnapshot(month: string): Promise<CalendarSnapshot> {
 	const { start, end } = getMonthRange(month);
 
 	let bookings: BookingRecord[] = [];
 	let blockedDates: BlockedDate[] = [];
 	let blacklist: BlacklistEntry[] = [];
+	let internalReservations: InternalReservation[] = [];
 
 	try {
-		[bookings, blockedDates, blacklist] = await Promise.all([
+		[bookings, blockedDates, blacklist, internalReservations] = await Promise.all([
 			fetchBookingsForRange(start, end),
 			fetchBlockedDatesForRange(start, end),
 			fetchBlacklistEntries(),
+			fetchInternalReservationsForRange(start, end),
 		]);
 	} catch (error) {
 		if (isMissingTableError(error)) {
@@ -236,6 +274,7 @@ export async function getCalendarSnapshot(month: string): Promise<CalendarSnapsh
 				blockedDates: [],
 				blacklist: [],
 				bookings: [],
+				internalReservations: [],
 				days: [],
 			};
 		}
@@ -259,10 +298,17 @@ export async function getCalendarSnapshot(month: string): Promise<CalendarSnapsh
 
 	const dates = listDatesInRange(start, end);
 	const activeBookings = bookings.filter((booking) => ACTIVE_BOOKING_STATUSES.has(booking.status));
+	const activeInternalReservations = internalReservations.filter(
+		(reservation) => reservation.status === "active" || reservation.status === "pickup_missed",
+	);
 
 	const dayAvailability: DayAvailability[] = dates.map((date) => {
 		const dayDeliveries = activeBookings.filter((booking) => booking.delivery_date === date).length;
-		const dayPickups = activeBookings.filter((booking) => booking.return_date === date).length;
+		const bookingPickups = activeBookings.filter((booking) => booking.return_date === date).length;
+		const internalReservationPickups = activeInternalReservations.filter(
+			(reservation) => reservation.pickup_date === date,
+		).length;
+		const dayPickups = bookingPickups + internalReservationPickups;
 
 		const blockedForDate = blockedDates.filter((blocked) => blocked.date === date);
 		const blockedReasons = blockedForDate.map((blocked) => blocked.reason || "Blocked").filter(Boolean);
@@ -273,12 +319,16 @@ export async function getCalendarSnapshot(month: string): Promise<CalendarSnapsh
 			const currentBooked = activeBookings.filter(
 				(booking) => booking.size_yards === sizeYards && bookingOccupiesDate(booking, date),
 			).length;
+			const internalReserved = activeInternalReservations.filter(
+				(reservation) => reservation.size_yards === sizeYards && reservationOccupiesDate(reservation, date),
+			).length;
 
 			const globalBlocked = blockedForDate.some((blocked) => blocked.size_yards == null);
 			const reservedUnits = blockedForDate.filter((blocked) => blocked.size_yards === sizeYards).length;
 			const effectiveCapacity = Math.max(0, capacity - reservedUnits);
+			const activeAssignments = currentBooked + internalReserved;
 			const isBlocked = globalBlocked;
-			const isBookable = !globalBlocked && currentBooked < effectiveCapacity;
+			const isBookable = !globalBlocked && activeAssignments < effectiveCapacity;
 
 			return {
 				size_yards: sizeYards,
@@ -286,7 +336,7 @@ export async function getCalendarSnapshot(month: string): Promise<CalendarSnapsh
 				capacity,
 				reservedUnits,
 				effectiveCapacity,
-				activeBookings: currentBooked,
+				activeBookings: activeAssignments,
 				isBlocked,
 				isBookable,
 			};
@@ -312,6 +362,7 @@ export async function getCalendarSnapshot(month: string): Promise<CalendarSnapsh
 			...booking,
 			total_price: Number(booking.total_price || 0),
 		})),
+		internalReservations,
 		days: dayAvailability,
 	};
 }
@@ -359,6 +410,123 @@ export async function freeDate(params: { id?: string; date?: string; size_yards?
 	}
 
 	const { error } = await query;
+	if (error) throw error;
+}
+
+export async function createInternalReservation(params: {
+	size_yards: number;
+	start_date: string;
+	pickup_date: string;
+	notes?: string;
+}) {
+	const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+	if (!datePattern.test(params.start_date) || !datePattern.test(params.pickup_date)) {
+		throw new Error("Invalid reservation dates.");
+	}
+
+	if (params.pickup_date < params.start_date) {
+		throw new Error("Pickup date cannot be before reservation start date.");
+	}
+
+	const capacityCheck = await checkBookingCapacity({
+		delivery_date: params.start_date,
+		return_date: params.pickup_date,
+		size_yards: Number(params.size_yards),
+	});
+
+	if (!capacityCheck.bookable) {
+		throw new BookingCapacityError(
+			capacityCheck.message,
+			capacityCheck.reason || "no_capacity",
+			capacityCheck.conflictingDate,
+		);
+	}
+
+	const { data, error } = await supabaseAdmin
+		.from("booking_internal_reservations")
+		.insert({
+			size_yards: Number(params.size_yards),
+			start_date: params.start_date,
+			pickup_date: params.pickup_date,
+			status: "active",
+			notes: params.notes?.trim() || null,
+		})
+		.select(
+			"id, size_yards, start_date, pickup_date, status, notes, pickup_notes, pickup_confirmed_at, created_at, updated_at",
+		)
+		.single();
+
+	if (error) throw error;
+
+	return data as InternalReservation;
+}
+
+export async function confirmInternalReservationPickup(params: {
+	id: string;
+	outcome: "picked_up" | "pickup_missed";
+	pickup_date?: string;
+	pickup_notes?: string;
+}) {
+	if (!params.id) {
+		throw new Error("Reservation id is required.");
+	}
+
+	if (params.outcome === "pickup_missed") {
+		const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+		if (!params.pickup_date || !datePattern.test(params.pickup_date)) {
+			throw new Error("A new pickup date is required when pickup did not happen.");
+		}
+	}
+
+	const { data: reservation, error: reservationError } = await supabaseAdmin
+		.from("booking_internal_reservations")
+		.select("id, size_yards, start_date, pickup_date, status")
+		.eq("id", params.id)
+		.single();
+
+	if (reservationError) throw reservationError;
+
+	if (params.outcome === "pickup_missed" && params.pickup_date) {
+		if (params.pickup_date < reservation.start_date) {
+			throw new Error("New pickup date cannot be before reservation start date.");
+		}
+
+		const capacityCheck = await checkBookingCapacity({
+			delivery_date: reservation.start_date,
+			return_date: params.pickup_date,
+			size_yards: Number(reservation.size_yards),
+		});
+
+		if (!capacityCheck.bookable) {
+			throw new BookingCapacityError(
+				capacityCheck.message,
+				capacityCheck.reason || "no_capacity",
+				capacityCheck.conflictingDate,
+			);
+		}
+	}
+
+	const updatePayload: Record<string, unknown> = {
+		status: params.outcome,
+		pickup_notes: params.pickup_notes?.trim() || null,
+		updated_at: new Date().toISOString(),
+	};
+
+	if (params.outcome === "picked_up") {
+		updatePayload.pickup_confirmed_at = new Date().toISOString();
+	}
+
+	if (params.outcome === "pickup_missed" && params.pickup_date) {
+		updatePayload.pickup_date = params.pickup_date;
+		updatePayload.status = "active";
+		updatePayload.pickup_confirmed_at = null;
+	}
+
+	const { error } = await supabaseAdmin
+		.from("booking_internal_reservations")
+		.update(updatePayload)
+		.eq("id", params.id);
+
 	if (error) throw error;
 }
 
@@ -519,9 +687,10 @@ export async function checkBookingCapacity(params: BookingCapacityParams): Promi
 		};
 	}
 
-	const [bookings, blockedDates] = await Promise.all([
+	const [bookings, blockedDates, internalReservations] = await Promise.all([
 		fetchBookingsForRange(params.delivery_date, params.return_date),
 		fetchBlockedDatesForRange(params.delivery_date, params.return_date),
+		fetchInternalReservationsForRange(params.delivery_date, params.return_date),
 	]);
 
 	const relevantBookings = bookings.filter(
@@ -529,6 +698,12 @@ export async function checkBookingCapacity(params: BookingCapacityParams): Promi
 			booking.size_yards === sizeYards &&
 			isActiveBookingStatus(booking.status) &&
 			booking.id !== params.exclude_booking_id,
+	);
+
+	const relevantReservations = internalReservations.filter(
+		(reservation) =>
+			reservation.size_yards === sizeYards &&
+			(reservation.status === "active" || reservation.status === "pickup_missed"),
 	);
 
 	const dates = listDatesInRange(params.delivery_date, params.return_date);
@@ -556,15 +731,17 @@ export async function checkBookingCapacity(params: BookingCapacityParams): Promi
 		const effectiveCapacity = Math.max(0, capacity - reservedUnits);
 
 		const activeBookings = relevantBookings.filter((booking) => bookingOccupiesDate(booking, date)).length;
+		const activeReservations = relevantReservations.filter((reservation) => reservationOccupiesDate(reservation, date)).length;
+		const activeAssignments = activeBookings + activeReservations;
 
-		if (activeBookings >= effectiveCapacity) {
+		if (activeAssignments >= effectiveCapacity) {
 			return {
 				bookable: false,
 				reason: "no_capacity",
 				message: `No units available for ${sizeYards}-yard dumpsters on ${date}. Choose an earlier pickup date or a different delivery date/size.`,
 				conflictingDate: date,
 				capacity: effectiveCapacity,
-				activeBookings,
+				activeBookings: activeAssignments,
 			};
 		}
 	}

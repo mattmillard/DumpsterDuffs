@@ -4,6 +4,8 @@ import {
   BookingCapacityError,
   blockDate,
   cancelBooking,
+  confirmInternalReservationPickup,
+  createInternalReservation,
   freeDate,
   getCalendarSnapshot,
   restoreBooking,
@@ -42,6 +44,20 @@ type CalendarActionPayload =
       action: "blacklist_toggle";
       id: string;
       is_active: boolean;
+    }
+  | {
+      action: "reserve_dumpster";
+      size_yards: number;
+      start_date: string;
+      pickup_date: string;
+      notes?: string;
+    }
+  | {
+      action: "reservation_pickup_outcome";
+      id: string;
+      outcome: "picked_up" | "pickup_missed";
+      pickup_date?: string;
+      pickup_notes?: string;
     };
 
 function getMonthParam(request: Request) {
@@ -155,6 +171,40 @@ export async function POST(request: Request) {
         }
 
         await toggleBlacklistEntry(payload.id, Boolean(payload.is_active));
+        break;
+      }
+
+      case "reserve_dumpster": {
+        if (!payload.size_yards || !payload.start_date || !payload.pickup_date) {
+          return NextResponse.json(
+            { error: "size_yards, start_date, and pickup_date are required" },
+            { status: 400 },
+          );
+        }
+
+        await createInternalReservation({
+          size_yards: Number(payload.size_yards),
+          start_date: payload.start_date,
+          pickup_date: payload.pickup_date,
+          notes: payload.notes,
+        });
+        break;
+      }
+
+      case "reservation_pickup_outcome": {
+        if (!payload.id || !payload.outcome) {
+          return NextResponse.json(
+            { error: "id and outcome are required" },
+            { status: 400 },
+          );
+        }
+
+        await confirmInternalReservationPickup({
+          id: payload.id,
+          outcome: payload.outcome,
+          pickup_date: payload.pickup_date,
+          pickup_notes: payload.pickup_notes,
+        });
         break;
       }
 

@@ -69,6 +69,33 @@ CREATE INDEX IF NOT EXISTS blocked_dates_date_active_idx ON booking_blocked_date
 CREATE INDEX IF NOT EXISTS blocked_dates_size_idx ON booking_blocked_dates(size_yards);
 
 -- ============================================================================
+-- TABLE: booking_internal_reservations
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS booking_internal_reservations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  size_yards INTEGER NOT NULL,
+  start_date DATE NOT NULL,
+  pickup_date DATE NOT NULL,
+  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'picked_up', 'pickup_missed')),
+
+  notes TEXT,
+  pickup_notes TEXT,
+  pickup_confirmed_at TIMESTAMPTZ,
+
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  created_by TEXT,
+
+  CONSTRAINT booking_internal_reservations_pickup_after_start CHECK (pickup_date >= start_date)
+);
+
+CREATE INDEX IF NOT EXISTS booking_internal_reservations_active_idx
+  ON booking_internal_reservations(status, pickup_date);
+CREATE INDEX IF NOT EXISTS booking_internal_reservations_range_idx
+  ON booking_internal_reservations(start_date, pickup_date, size_yards);
+
+-- ============================================================================
 -- TABLE: booking_blacklist
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS booking_blacklist (
@@ -113,6 +140,7 @@ ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE booking_blocked_dates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE booking_blacklist ENABLE ROW LEVEL SECURITY;
 ALTER TABLE booking_activity_log ENABLE ROW LEVEL SECURITY;
+ALTER TABLE booking_internal_reservations ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Allow service role full access (for server-side operations)
 CREATE POLICY "Service role full access to bookings" ON bookings
@@ -125,6 +153,9 @@ CREATE POLICY "Service role full access to blacklist" ON booking_blacklist
   FOR ALL USING (auth.role() = 'service_role');
 
 CREATE POLICY "Service role full access to activity log" ON booking_activity_log
+  FOR ALL USING (auth.role() = 'service_role');
+
+CREATE POLICY "Service role full access to internal reservations" ON booking_internal_reservations
   FOR ALL USING (auth.role() = 'service_role');
 
 -- Policy: Allow public read access to active non-cancelled bookings (for availability checking)
@@ -151,6 +182,12 @@ CREATE TRIGGER update_bookings_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_internal_reservations_updated_at ON booking_internal_reservations;
+CREATE TRIGGER update_internal_reservations_updated_at
+  BEFORE UPDATE ON booking_internal_reservations
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
 -- ============================================================================
 -- SAMPLE DATA (optional - remove in production)
 -- ============================================================================
@@ -170,3 +207,4 @@ SELECT COUNT(*) FROM bookings;
 SELECT COUNT(*) FROM booking_blocked_dates;
 SELECT COUNT(*) FROM booking_blacklist;
 SELECT COUNT(*) FROM booking_activity_log;
+SELECT COUNT(*) FROM booking_internal_reservations;

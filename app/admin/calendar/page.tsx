@@ -11,6 +11,7 @@ type CalendarSnapshot = {
   setupMessage?: string;
   days: DayAvailability[];
   bookings: CalendarBooking[];
+  internalReservations: InternalReservation[];
   blockedDates: BlockedDate[];
   blacklist: BlacklistEntry[];
 };
@@ -43,6 +44,19 @@ type CalendarBooking = {
   total_price: number;
 };
 
+type InternalReservation = {
+  id: string;
+  size_yards: number;
+  start_date: string;
+  pickup_date: string;
+  status: "active" | "picked_up" | "pickup_missed";
+  notes: string | null;
+  pickup_notes: string | null;
+  pickup_confirmed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 type BlockedDate = {
   id: string;
   date: string;
@@ -70,7 +84,7 @@ export default function AdminCalendarPage() {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<
-    "calendar" | "bookings" | "blacklist"
+    "calendar" | "bookings" | "reservations" | "blacklist"
   >("calendar");
 
   const loadCalendar = async (month: string) => {
@@ -221,6 +235,88 @@ export default function AdminCalendarPage() {
     await loadCalendar(currentMonth);
   };
 
+  const reserveDumpster = async () => {
+    const sizeRaw = prompt("Dumpster size in yards (10, 15, 20, 30):");
+    if (!sizeRaw) return;
+
+    const sizeYards = Number(sizeRaw);
+    if (!Number.isFinite(sizeYards) || sizeYards <= 0) {
+      alert("Enter a valid dumpster size.");
+      return;
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+    const startDate = prompt("Reservation start date (YYYY-MM-DD):", today);
+    if (!startDate) return;
+
+    const pickupDate = prompt(
+      "Planned pickup date (YYYY-MM-DD):",
+      selectedDate || startDate,
+    );
+    if (!pickupDate) return;
+
+    const notes = prompt("Notes (optional):") || "";
+
+    const response = await fetch("/api/admin/calendar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "reserve_dumpster",
+        size_yards: sizeYards,
+        start_date: startDate,
+        pickup_date: pickupDate,
+        notes: notes.trim() || undefined,
+      }),
+    });
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      alert(payload?.error || "Failed to reserve dumpster.");
+      return;
+    }
+
+    await loadCalendar(currentMonth);
+  };
+
+  const submitReservationOutcome = async (
+    reservation: InternalReservation,
+    outcome: "picked_up" | "pickup_missed",
+  ) => {
+    let pickupDate: string | undefined;
+    let pickupNotes: string | undefined;
+
+    if (outcome === "pickup_missed") {
+      pickupDate = prompt(
+        "Pickup did not happen. Enter new pickup date (YYYY-MM-DD):",
+        reservation.pickup_date,
+      ) || undefined;
+
+      if (!pickupDate) return;
+    }
+
+    pickupNotes = prompt("Pickup notes (optional):") || undefined;
+
+    const response = await fetch("/api/admin/calendar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "reservation_pickup_outcome",
+        id: reservation.id,
+        outcome,
+        pickup_date: pickupDate,
+        pickup_notes: pickupNotes,
+      }),
+    });
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      alert(payload?.error || "Failed to update pickup outcome.");
+      return;
+    }
+
+    await loadCalendar(currentMonth);
+  };
+
   if (loading && !snapshot) {
     return (
       <div className="space-y-6">
@@ -271,6 +367,15 @@ export default function AdminCalendarPage() {
       ) || []
     : [];
 
+  const dayReservations = selectedDate
+    ? snapshot?.internalReservations.filter(
+        (reservation) =>
+          reservation.start_date <= selectedDate &&
+          reservation.pickup_date >= selectedDate &&
+          reservation.status === "active",
+      ) || []
+    : [];
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -281,14 +386,19 @@ export default function AdminCalendarPage() {
             Manage bookings, block dates, and availability
           </p>
         </div>
-        <AdminButton variant="primary" onClick={addToBlacklist}>
-          + Blacklist Entry
-        </AdminButton>
+        <div className="flex items-center gap-3">
+          <AdminButton variant="secondary" onClick={addToBlacklist}>
+            + Blacklist Entry
+          </AdminButton>
+          <AdminButton variant="primary" onClick={reserveDumpster}>
+            + Reserve Dumpster
+          </AdminButton>
+        </div>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-[#404040]">
-        {(["calendar", "bookings", "blacklist"] as const).map((tab) => (
+        {(["calendar", "bookings", "reservations", "blacklist"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -304,6 +414,15 @@ export default function AdminCalendarPage() {
                 {
                   snapshot.bookings.filter((b) =>
                     ["pending", "scheduled", "in_progress"].includes(b.status),
+                  ).length
+                }
+              </span>
+            )}
+            {tab === "reservations" && snapshot && (
+              <span className="ml-2 text-xs bg-[#404040] px-2 py-1 rounded">
+                {
+                  snapshot.internalReservations.filter(
+                    (reservation) => reservation.status === "active",
                   ).length
                 }
               </span>
@@ -442,7 +561,7 @@ export default function AdminCalendarPage() {
                       })}
                     </h3>
                     <p className="text-sm text-[#999999]">
-                      {dayBookings.length} active booking(s)
+                      {dayBookings.length} active booking(s) • {dayReservations.length} internal reservation(s)
                     </p>
                   </div>
 
@@ -552,6 +671,61 @@ export default function AdminCalendarPage() {
                       </div>
                     </div>
                   )}
+
+                  {/* Internal Reservations for Day */}
+                  {dayReservations.length > 0 && (
+                    <div className="pt-4 border-t border-[#404040]">
+                      <p className="text-xs font-semibold text-[#999999] uppercase mb-2">
+                        Internal Reservations
+                      </p>
+                      <div className="space-y-2">
+                        {dayReservations.map((reservation) => (
+                          <div
+                            key={reservation.id}
+                            className="text-sm bg-[#262626] p-3 rounded space-y-2"
+                          >
+                            <p className="text-white font-semibold">
+                              {reservation.size_yards} Yard Internal Hold
+                            </p>
+                            <p className="text-xs text-[#999999]">
+                              {reservation.start_date} → {reservation.pickup_date}
+                            </p>
+                            {reservation.notes && (
+                              <p className="text-xs text-[#B3D4FF]">
+                                {reservation.notes}
+                              </p>
+                            )}
+                            {selectedDay.date === reservation.pickup_date && (
+                              <div className="flex gap-3">
+                                <button
+                                  onClick={() =>
+                                    submitReservationOutcome(
+                                      reservation,
+                                      "picked_up",
+                                    )
+                                  }
+                                  className="text-xs text-green-400 hover:underline"
+                                >
+                                  Confirm Pickup
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    submitReservationOutcome(
+                                      reservation,
+                                      "pickup_missed",
+                                    )
+                                  }
+                                  className="text-xs text-yellow-300 hover:underline"
+                                >
+                                  Pickup Did Not Happen
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="bg-[#1A1A1A] border border-[#404040] rounded-lg p-8 text-center">
@@ -624,6 +798,85 @@ export default function AdminCalendarPage() {
                       </button>
                     )}
                   </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Reservations Tab */}
+      {activeTab === "reservations" && (
+        <div className="bg-[#1A1A1A] border border-[#404040] rounded-lg divide-y divide-[#404040]">
+          {snapshot?.internalReservations.length === 0 ? (
+            <div className="p-8 text-center text-[#999999]">
+              No internal reservations.
+            </div>
+          ) : (
+            snapshot?.internalReservations.map((reservation) => (
+              <div
+                key={reservation.id}
+                className="p-4 flex items-start justify-between gap-4"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-1">
+                    <p className="text-white font-semibold">
+                      {reservation.size_yards} Yard Internal Reservation
+                    </p>
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
+                        reservation.status === "picked_up"
+                          ? "bg-green-500/20 text-green-400"
+                          : reservation.status === "pickup_missed"
+                            ? "bg-yellow-500/20 text-yellow-300"
+                            : "bg-blue-500/20 text-blue-300"
+                      }`}
+                    >
+                      {reservation.status}
+                    </span>
+                  </div>
+                  <p className="text-sm text-[#999999]">
+                    {reservation.start_date} → {reservation.pickup_date}
+                  </p>
+                  {reservation.notes && (
+                    <p className="text-xs text-[#B3D4FF] mt-1">
+                      {reservation.notes}
+                    </p>
+                  )}
+                  {reservation.pickup_notes && (
+                    <p className="text-xs text-[#999999] mt-1">
+                      Pickup notes: {reservation.pickup_notes}
+                    </p>
+                  )}
+                </div>
+
+                <div className="text-right">
+                  <p className="text-xs text-[#666666] mb-2">
+                    #{reservation.id.slice(0, 8)}
+                  </p>
+                  {reservation.status === "active" && (
+                    <div className="flex gap-2 justify-end">
+                      <button
+                        onClick={() =>
+                          submitReservationOutcome(reservation, "picked_up")
+                        }
+                        className="text-xs text-green-400 hover:underline"
+                      >
+                        Confirm Pickup
+                      </button>
+                      <button
+                        onClick={() =>
+                          submitReservationOutcome(
+                            reservation,
+                            "pickup_missed",
+                          )
+                        }
+                        className="text-xs text-yellow-300 hover:underline"
+                      >
+                        Did Not Happen
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))
