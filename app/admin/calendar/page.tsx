@@ -77,6 +77,7 @@ type BlacklistEntry = {
 
 export default function AdminCalendarPage() {
   const [snapshot, setSnapshot] = useState<CalendarSnapshot | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(() => {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -89,10 +90,36 @@ export default function AdminCalendarPage() {
 
   const loadCalendar = async (month: string) => {
     setLoading(true);
+    setLoadError(null);
     try {
       const response = await fetch(`/api/admin/calendar?month=${month}`);
-      const data = (await response.json()) as CalendarSnapshot;
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          typeof payload?.error === "string"
+            ? payload.error
+            : "Failed to load calendar",
+        );
+      }
+
+      const data = payload as Partial<CalendarSnapshot>;
+      if (
+        !Array.isArray(data.days) ||
+        !Array.isArray(data.bookings) ||
+        !Array.isArray(data.blockedDates) ||
+        !Array.isArray(data.blacklist)
+      ) {
+        throw new Error("Calendar payload was invalid.");
+      }
+
       setSnapshot(data);
+    } catch (error) {
+      setLoadError(
+        error instanceof Error
+          ? error.message
+          : "Failed to load calendar operations.",
+      );
     } finally {
       setLoading(false);
     }
@@ -286,10 +313,11 @@ export default function AdminCalendarPage() {
     let pickupNotes: string | undefined;
 
     if (outcome === "pickup_missed") {
-      pickupDate = prompt(
-        "Pickup did not happen. Enter new pickup date (YYYY-MM-DD):",
-        reservation.pickup_date,
-      ) || undefined;
+      pickupDate =
+        prompt(
+          "Pickup did not happen. Enter new pickup date (YYYY-MM-DD):",
+          reservation.pickup_date,
+        ) || undefined;
 
       if (!pickupDate) return;
     }
@@ -323,6 +351,23 @@ export default function AdminCalendarPage() {
         <h1 className="text-4xl font-bold text-white">Calendar</h1>
         <div className="bg-[#1A1A1A] border border-[#404040] rounded-lg p-12 text-center">
           <p className="text-[#999999]">Loading calendar...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!snapshot && loadError) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-4xl font-bold text-white">Calendar</h1>
+        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-8">
+          <h2 className="text-xl font-bold text-red-400 mb-2">
+            Calendar Unavailable
+          </h2>
+          <p className="text-white mb-4">{loadError}</p>
+          <AdminButton variant="secondary" onClick={() => loadCalendar(currentMonth)}>
+            Retry
+          </AdminButton>
         </div>
       </div>
     );
@@ -398,42 +443,46 @@ export default function AdminCalendarPage() {
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-[#404040]">
-        {(["calendar", "bookings", "reservations", "blacklist"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 font-semibold capitalize transition-colors ${
-              activeTab === tab
-                ? "text-primary border-b-2 border-primary"
-                : "text-[#999999] hover:text-white"
-            }`}
-          >
-            {tab}
-            {tab === "bookings" && snapshot && (
-              <span className="ml-2 text-xs bg-[#404040] px-2 py-1 rounded">
-                {
-                  snapshot.bookings.filter((b) =>
-                    ["pending", "scheduled", "in_progress"].includes(b.status),
-                  ).length
-                }
-              </span>
-            )}
-            {tab === "reservations" && snapshot && (
-              <span className="ml-2 text-xs bg-[#404040] px-2 py-1 rounded">
-                {
-                  snapshot.internalReservations.filter(
-                    (reservation) => reservation.status === "active",
-                  ).length
-                }
-              </span>
-            )}
-            {tab === "blacklist" && snapshot && (
-              <span className="ml-2 text-xs bg-[#404040] px-2 py-1 rounded">
-                {snapshot.blacklist.filter((b) => b.is_active).length}
-              </span>
-            )}
-          </button>
-        ))}
+        {(["calendar", "bookings", "reservations", "blacklist"] as const).map(
+          (tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 font-semibold capitalize transition-colors ${
+                activeTab === tab
+                  ? "text-primary border-b-2 border-primary"
+                  : "text-[#999999] hover:text-white"
+              }`}
+            >
+              {tab}
+              {tab === "bookings" && snapshot && (
+                <span className="ml-2 text-xs bg-[#404040] px-2 py-1 rounded">
+                  {
+                    (snapshot.bookings || []).filter((b) =>
+                      ["pending", "scheduled", "in_progress"].includes(
+                        b.status,
+                      ),
+                    ).length
+                  }
+                </span>
+              )}
+              {tab === "reservations" && snapshot && (
+                <span className="ml-2 text-xs bg-[#404040] px-2 py-1 rounded">
+                  {
+                    (snapshot.internalReservations || []).filter(
+                      (reservation) => reservation.status === "active",
+                    ).length
+                  }
+                </span>
+              )}
+              {tab === "blacklist" && snapshot && (
+                <span className="ml-2 text-xs bg-[#404040] px-2 py-1 rounded">
+                  {(snapshot.blacklist || []).filter((b) => b.is_active).length}
+                </span>
+              )}
+            </button>
+          ),
+        )}
       </div>
 
       {/* Calendar Tab */}
@@ -561,7 +610,8 @@ export default function AdminCalendarPage() {
                       })}
                     </h3>
                     <p className="text-sm text-[#999999]">
-                      {dayBookings.length} active booking(s) • {dayReservations.length} internal reservation(s)
+                      {dayBookings.length} active booking(s) •{" "}
+                      {dayReservations.length} internal reservation(s)
                     </p>
                   </div>
 
@@ -688,7 +738,8 @@ export default function AdminCalendarPage() {
                               {reservation.size_yards} Yard Internal Hold
                             </p>
                             <p className="text-xs text-[#999999]">
-                              {reservation.start_date} → {reservation.pickup_date}
+                              {reservation.start_date} →{" "}
+                              {reservation.pickup_date}
                             </p>
                             {reservation.notes && (
                               <p className="text-xs text-[#B3D4FF]">
@@ -866,10 +917,7 @@ export default function AdminCalendarPage() {
                       </button>
                       <button
                         onClick={() =>
-                          submitReservationOutcome(
-                            reservation,
-                            "pickup_missed",
-                          )
+                          submitReservationOutcome(reservation, "pickup_missed")
                         }
                         className="text-xs text-yellow-300 hover:underline"
                       >
