@@ -15,10 +15,11 @@ type ExistingBookingRow = {
 
 export async function GET() {
   try {
+    // Try structured schema first (all address fields)
     const structuredQuery = await supabaseAdmin
       .from("bookings")
       .select(
-        "id, customer_name, customer_email, customer_phone, customer_company, size_yards, delivery_date, return_date, total_price, subtotal, delivery_fee, tax, status, payment_status, delivery_address_line_1, delivery_address_line_2, delivery_city, delivery_state, delivery_zip, placement_notes, created_at",
+        "id, customer_name, customer_email, customer_phone, size_yards, delivery_date, return_date, total_price, subtotal, delivery_fee, tax, status, payment_status, delivery_address_line_1, delivery_address_line_2, delivery_city, delivery_state, delivery_zip, placement_notes, created_at",
       )
       .order("created_at", { ascending: false });
 
@@ -26,10 +27,11 @@ export async function GET() {
       return NextResponse.json(structuredQuery.data || []);
     }
 
+    // Try legacy schema (single delivery_address field)
     const legacyQuery = await supabaseAdmin
       .from("bookings")
       .select(
-        "id, customer_name, customer_email, customer_phone, customer_company, size_yards, delivery_date, return_date, total_price, status, payment_status, delivery_address, notes, created_at",
+        "id, customer_name, customer_email, customer_phone, size_yards, delivery_date, return_date, pickup_date, total_price, status, payment_status, delivery_address, notes, created_at",
       )
       .order("created_at", { ascending: false });
 
@@ -39,6 +41,8 @@ export async function GET() {
       >;
       const normalized = legacyRows.map((booking) => ({
         ...booking,
+        // Use return_date if present, otherwise pickup_date
+        return_date: booking.return_date || booking.pickup_date || null,
         subtotal: null,
         delivery_fee: null,
         tax: null,
@@ -54,10 +58,11 @@ export async function GET() {
       return NextResponse.json(normalized);
     }
 
+    // Minimal fallback - try with just pickup_date (no return_date)
     const minimalQuery = await supabaseAdmin
       .from("bookings")
       .select(
-        "id, customer_name, customer_phone, size_yards, delivery_date, return_date, total_price, status, created_at",
+        "id, customer_name, customer_phone, customer_email, size_yards, delivery_date, pickup_date, total_price, status, delivery_address, notes, created_at",
       )
       .order("created_at", { ascending: false });
 
@@ -70,18 +75,18 @@ export async function GET() {
     >;
     const minimalNormalized = minimalRows.map((booking) => ({
       ...booking,
-      customer_email: null,
-      customer_company: null,
+      return_date: booking.pickup_date || null,
       payment_status: null,
       subtotal: null,
       delivery_fee: null,
       tax: null,
-      delivery_address_line_1: null,
+      delivery_address_line_1:
+        (booking.delivery_address as string | null) || null,
       delivery_address_line_2: null,
       delivery_city: null,
       delivery_state: null,
       delivery_zip: null,
-      placement_notes: null,
+      placement_notes: (booking.notes as string | null) || null,
     }));
 
     return NextResponse.json(minimalNormalized);
