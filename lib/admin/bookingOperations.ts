@@ -47,6 +47,7 @@ export type InternalReservation = {
   size_yards: number;
   start_date: string;
   pickup_date: string;
+  pickup_time_slot: "AM" | "PM" | null;
   status: "active" | "picked_up" | "pickup_missed";
   notes: string | null;
   pickup_notes: string | null;
@@ -308,6 +309,7 @@ async function fetchInternalReservationsForRange(start: string, end: string) {
     size_yards: Number(row.size_yards || 0),
     start_date: String(row.start_date || ""),
     pickup_date: String(row.pickup_date || ""),
+    pickup_time_slot: (row.pickup_time_slot as "AM" | "PM" | null) ?? null,
     status: (row.status as InternalReservation["status"]) || "active",
     notes: (row.notes as string | null) ?? null,
     pickup_notes: (row.pickup_notes as string | null) ?? null,
@@ -526,6 +528,7 @@ export async function createInternalReservation(params: {
   size_yards: number;
   start_date: string;
   pickup_date: string;
+  pickup_time_slot?: "AM" | "PM";
   notes?: string;
 }) {
   const datePattern = /^\d{4}-\d{2}-\d{2}$/;
@@ -560,6 +563,7 @@ export async function createInternalReservation(params: {
       size_yards: Number(params.size_yards),
       start_date: params.start_date,
       pickup_date: params.pickup_date,
+      pickup_time_slot: params.pickup_time_slot || null,
       status: "active",
       notes: params.notes?.trim() || null,
     })
@@ -573,6 +577,7 @@ export async function createInternalReservation(params: {
     size_yards: Number(data.size_yards || 0),
     start_date: String(data.start_date || ""),
     pickup_date: String(data.pickup_date || ""),
+    pickup_time_slot: (data.pickup_time_slot as "AM" | "PM" | null) ?? null,
     status: (data.status as InternalReservation["status"]) || "active",
     notes: (data.notes as string | null) ?? null,
     pickup_notes: (data.pickup_notes as string | null) ?? null,

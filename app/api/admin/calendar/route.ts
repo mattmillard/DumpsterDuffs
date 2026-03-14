@@ -66,7 +66,11 @@ function getErrorMessage(error: unknown): string {
   }
 
   if (error && typeof error === "object") {
-    const maybeError = error as { message?: unknown; details?: unknown; hint?: unknown };
+    const maybeError = error as {
+      message?: unknown;
+      details?: unknown;
+      hint?: unknown;
+    };
 
     if (typeof maybeError.message === "string" && maybeError.message.trim()) {
       return maybeError.message;
@@ -214,6 +218,7 @@ export async function POST(request: Request) {
           size_yards: Number(payload.size_yards),
           start_date: payload.start_date,
           pickup_date: payload.pickup_date,
+          pickup_time_slot: payload.pickup_time_slot,
           notes: payload.notes,
         });
         break;

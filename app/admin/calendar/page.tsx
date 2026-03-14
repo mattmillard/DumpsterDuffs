@@ -49,6 +49,7 @@ type InternalReservation = {
   size_yards: number;
   start_date: string;
   pickup_date: string;
+  pickup_time_slot: "AM" | "PM" | null;
   status: "active" | "picked_up" | "pickup_missed";
   notes: string | null;
   pickup_notes: string | null;
@@ -91,6 +92,7 @@ export default function AdminCalendarPage() {
   const [reservationSize, setReservationSize] = useState(15);
   const [reservationStartDate, setReservationStartDate] = useState("");
   const [reservationPickupDate, setReservationPickupDate] = useState("");
+  const [reservationPickupTimeSlot, setReservationPickupTimeSlot] = useState<"AM" | "PM">("AM");
   const [reservationNotes, setReservationNotes] = useState("");
   const [reservationSubmitting, setReservationSubmitting] = useState(false);
   const [reservationError, setReservationError] = useState<string | null>(null);
@@ -293,6 +295,7 @@ export default function AdminCalendarPage() {
     setReservationSize(selectedSize || 15);
     setReservationStartDate(defaultStart);
     setReservationPickupDate(defaultPickup);
+    setReservationPickupTimeSlot("AM");
     setReservationNotes("");
     setReservationError(null);
     setShowReservationModal(true);
@@ -326,6 +329,7 @@ export default function AdminCalendarPage() {
           size_yards: reservationSize,
           start_date: reservationStartDate,
           pickup_date: reservationPickupDate,
+          pickup_time_slot: reservationPickupTimeSlot,
           notes: reservationNotes.trim() || undefined,
         }),
       });
@@ -931,9 +935,17 @@ export default function AdminCalendarPage() {
                     >
                       {reservation.status}
                     </span>
+                    {reservation.pickup_time_slot && (
+                      <span className="text-xs px-2 py-1 rounded bg-[#404040] text-white">
+                        {reservation.pickup_time_slot} Pickup
+                      </span>
+                    )}
                   </div>
                   <p className="text-sm text-[#999999]">
                     {reservation.start_date} → {reservation.pickup_date}
+                    {reservation.pickup_time_slot && (
+                      <span className="ml-1">({reservation.pickup_time_slot})</span>
+                    )}
                   </p>
                   {reservation.notes && (
                     <p className="text-xs text-[#B3D4FF] mt-1">
@@ -1033,19 +1045,26 @@ export default function AdminCalendarPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="w-full max-w-lg bg-[#1A1A1A] border border-[#404040] rounded-lg shadow-2xl">
               <div className="px-6 py-4 border-b border-[#404040]">
-                <h3 className="text-xl font-bold text-white">Reserve Dumpster</h3>
+                <h3 className="text-xl font-bold text-white">
+                  Reserve Dumpster
+                </h3>
                 <p className="text-sm text-[#999999] mt-1">
-                  Block one dumpster until pickup. Availability restores after pickup confirmation.
+                  Block one dumpster until pickup. Availability restores after
+                  pickup confirmation.
                 </p>
               </div>
 
               <div className="px-6 py-4 space-y-4">
                 <div>
-                  <label className="block text-sm text-[#999999] mb-2">Dumpster Size</label>
+                  <label className="block text-sm text-[#999999] mb-2">
+                    Dumpster Size
+                  </label>
                   <select
                     className="input-field w-full"
                     value={reservationSize}
-                    onChange={(event) => setReservationSize(Number(event.target.value))}
+                    onChange={(event) =>
+                      setReservationSize(Number(event.target.value))
+                    }
                     disabled={reservationSubmitting}
                   >
                     {Array.from(
@@ -1066,35 +1085,79 @@ export default function AdminCalendarPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm text-[#999999] mb-2">Start Date</label>
+                    <label className="block text-sm text-[#999999] mb-2">
+                      Start Date
+                    </label>
                     <input
                       type="date"
                       className="input-field w-full"
                       value={reservationStartDate}
-                      onChange={(event) => setReservationStartDate(event.target.value)}
+                      onChange={(event) =>
+                        setReservationStartDate(event.target.value)
+                      }
                       disabled={reservationSubmitting}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-[#999999] mb-2">Pickup Date</label>
+                    <label className="block text-sm text-[#999999] mb-2">
+                      Pickup Date
+                    </label>
                     <input
                       type="date"
                       className="input-field w-full"
                       value={reservationPickupDate}
                       min={reservationStartDate || undefined}
-                      onChange={(event) => setReservationPickupDate(event.target.value)}
+                      onChange={(event) =>
+                        setReservationPickupDate(event.target.value)
+                      }
                       disabled={reservationSubmitting}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm text-[#999999] mb-2">Notes (optional)</label>
+                  <label className="block text-sm text-[#999999] mb-2">
+                    Pickup Time Slot
+                  </label>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setReservationPickupTimeSlot("AM")}
+                      className={`flex-1 py-3 px-4 rounded-lg border text-sm font-medium transition-colors ${
+                        reservationPickupTimeSlot === "AM"
+                          ? "bg-primary text-white border-primary"
+                          : "bg-[#2A2A2A] text-white border-[#404040] hover:border-[#606060]"
+                      }`}
+                      disabled={reservationSubmitting}
+                    >
+                      AM (Morning)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setReservationPickupTimeSlot("PM")}
+                      className={`flex-1 py-3 px-4 rounded-lg border text-sm font-medium transition-colors ${
+                        reservationPickupTimeSlot === "PM"
+                          ? "bg-primary text-white border-primary"
+                          : "bg-[#2A2A2A] text-white border-[#404040] hover:border-[#606060]"
+                      }`}
+                      disabled={reservationSubmitting}
+                    >
+                      PM (Afternoon)
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm text-[#999999] mb-2">
+                    Notes (optional)
+                  </label>
                   <textarea
                     className="input-field w-full min-h-[90px]"
                     value={reservationNotes}
-                    onChange={(event) => setReservationNotes(event.target.value)}
+                    onChange={(event) =>
+                      setReservationNotes(event.target.value)
+                    }
                     placeholder="Example: contractor hold, temp rollover, weather delay"
                     disabled={reservationSubmitting}
                   />
