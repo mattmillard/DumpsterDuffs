@@ -26,10 +26,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 		async function checkAuth() {
 			try {
-				const adminUser = await Promise.race([
-					getCurrentAdminUser(),
-					new Promise<null>((resolve) => setTimeout(() => resolve(null), 10000)),
-				]);
+				const adminUser = await getCurrentAdminUser();
 
 				if (!adminUser) {
 					router.push(`/admin/login?redirect=${encodeURIComponent(pathname)}`);

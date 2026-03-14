@@ -2,50 +2,65 @@
 import { supabase } from "@/lib/supabase/client";
 import { AdminUser, AdminRole } from "@/types/admin";
 
+let inFlightAdminLookup: Promise<AdminUser | null> | null = null;
+
+async function fetchAdminByUserId(userId: string): Promise<AdminUser | null> {
+  const { data: admin, error } = await supabase
+    .from("admin_users")
+    .select("id, email, full_name, role, is_active, created_at, last_login")
+    .eq("id", userId)
+    .single();
+
+  if (error || !admin) {
+    console.error("Admin user not found in admin_users table:", error);
+    return null;
+  }
+
+  if (!admin.is_active || !["admin", "owner", "dispatcher"].includes(admin.role)) {
+    return null;
+  }
+
+  return {
+    id: admin.id,
+    email: admin.email,
+    full_name: admin.full_name || "",
+    role: admin.role as AdminRole,
+    is_active: admin.is_active,
+    created_at: admin.created_at,
+    last_login: admin.last_login,
+  };
+}
+
 /**
  * Get the current authenticated admin user
  */
 export async function getCurrentAdminUser(): Promise<AdminUser | null> {
+  if (inFlightAdminLookup) {
+    return inFlightAdminLookup;
+  }
+
+  inFlightAdminLookup = (async () => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        return null;
+      }
+
+      return await fetchAdminByUserId(user.id);
+    } catch (error) {
+      console.error("Error fetching admin user:", error);
+      return null;
+    } finally {
+      inFlightAdminLookup = null;
+    }
+  })();
+
   try {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session?.user) {
-      return null;
-    }
-
-    // Fetch admin profile from admin_users table
-    const { data: admin, error } = await supabase
-      .from("admin_users")
-      .select("id, email, full_name, role, is_active, created_at, last_login")
-      .eq("id", session.user.id)
-      .single();
-
-    if (error || !admin) {
-      console.error("Admin user not found in admin_users table:", error);
-      return null;
-    }
-
-    // Check if user has admin role and is active
-    if (
-      !["admin", "owner", "dispatcher"].includes(admin.role) ||
-      !admin.is_active
-    ) {
-      return null; // Not an admin or inactive
-    }
-
-    return {
-      id: admin.id,
-      email: admin.email,
-      full_name: admin.full_name || "",
-      role: admin.role as AdminRole,
-      is_active: admin.is_active,
-      created_at: admin.created_at,
-      last_login: admin.last_login,
-    };
-  } catch (error) {
-    console.error("Error fetching admin user:", error);
+    return await inFlightAdminLookup;
+  } catch {
     return null;
   }
 }
@@ -97,7 +112,15 @@ export async function adminLogin(
       return { success: false, error: error.message };
     }
 
-    const adminUser = await getCurrentAdminUser();
+    const signedInUser = data.user;
+    if (!signedInUser) {
+      return {
+        success: false,
+        error: "Login failed. Please try again.",
+      };
+    }
+
+    const adminUser = await fetchAdminByUserId(signedInUser.id);
 
     if (!adminUser) {
       await supabase.auth.signOut();
@@ -148,9 +171,14 @@ export async function adminLogout(): Promise<{
 export function onAuthStateChange(callback: (user: AdminUser | null) => void) {
   const {
     data: { subscription },
-  } = supabase.auth.onAuthStateChange(async () => {
-    const user = await getCurrentAdminUser();
-    callback(user);
+  } = supabase.auth.onAuthStateChange(async (event) => {
+    if (event === "SIGNED_OUT") {
+      callback(null);
+      return;
+    }
+
+    const adminUser = await getCurrentAdminUser();
+    callback(adminUser);
   });
 
   return subscription;
